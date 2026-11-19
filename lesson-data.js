@@ -358,37 +358,37 @@ window.LESSON_01_DATA = {
     {
       id: "act-fill",
       kind: "fill",
-      phase: "Tổng hợp · 6 phút",
-      title: "Bài tập 3: Khung SCQ — Tự ghép câu lệnh sắc bén để dán vào AI",
-      lead: "Áp dụng mô hình SCQ (Tình huống – Cái khó riêng – Câu hỏi mấu chốt): bạn chỉ cần điền 3 ô ngắn bên dưới, trang web sẽ tự động ghép thành một câu lệnh chuẩn chỉnh (có cả yêu cầu mở góc khuất và trích số trang) để bạn sao chép dán thẳng vào Gemini / ChatGPT.",
+      phase: "Tổng hợp · 5 phút",
+      title: "Bài tập 3: Công thức bỏ túi “SCQ + Trang – Sót – Bàn”",
+      lead: "Điền 3 mảnh S – C – Q của bạn bên dưới để ghép thành câu lệnh ngắn gọn, dễ thuộc lòng (nhớ 2 nhịp: Nêu S–C–Q của mình + Dặn AI 3 chữ Trang – Sót – Bàn).",
       fields: [
         {
           slot: "S",
-          label: "Việc trước mắt (Tình huống — Mình đang cần xử lý tài liệu gì?)",
-          hintAdult: "Gợi ý: bản hợp đồng thuê mặt bằng mở quán cà phê dày 12 trang",
-          hintStudent: "Gợi ý: tập tư liệu Lịch sử 12 trang về Trần Quốc Toản để viết kịch bản đóng vai 3 phút",
-          sampleAdult: "bản hợp đồng thuê mặt bằng mở quán cà phê dày 12 trang",
-          sampleStudent: "tập tư liệu Lịch sử 12 trang về Trần Quốc Toản để viết kịch bản đóng vai 3 phút"
+          label: "Mình đang... (Việc trước mắt cần xử lý)",
+          hintAdult: "Gợi ý: xem hợp đồng thuê mặt bằng mở quán dày 12 trang",
+          hintStudent: "Gợi ý: soạn kịch bản Sử về Trần Quốc Toản từ tư liệu 12 trang thầy phát",
+          sampleAdult: "xem hợp đồng thuê mặt bằng mở quán dày 12 trang",
+          sampleStudent: "soạn kịch bản Sử về Trần Quốc Toản từ tư liệu 12 trang thầy phát"
         },
         {
           slot: "C",
-          label: "Cái khó & nỗi lo riêng của mình (Hoàn cảnh vướng ở đâu, mình tự lo điều gì nhất?)",
-          hintAdult: "Gợi ý: mình chỉ đủ vốn cầm cự 10 tháng đầu nếu vắng khách, nên đang lo nhất chuyện mất tiền cọc",
-          hintStudent: "Gợi ý: thầy bắt buộc cảnh diễn chính chỉ dùng sự kiện chính sử, nên nhóm rất sợ viết nhầm chi tiết truyện kể văn học vào",
-          sampleAdult: "mình chỉ đủ vốn cầm cự 10 tháng đầu nếu quán vắng khách, nên ban đầu mình đang lo nhất chuyện mất tiền cọc",
-          sampleStudent: "thầy bắt buộc cảnh diễn chính chỉ dùng sự kiện chính sử, nên nhóm đang lo viết nhầm chi tiết tiểu thuyết văn học thành lịch sử thật"
+          label: "nhưng... (Cái khó & nỗi lo riêng của mình)",
+          hintAdult: "Gợi ý: vốn chỉ trụ được 10 tháng nếu vắng khách và đang sợ mất tiền cọc",
+          hintStudent: "Gợi ý: thầy bắt cảnh chính chỉ dùng chính sử nên rất sợ nhầm chi tiết văn học vào",
+          sampleAdult: "vốn chỉ trụ được 10 tháng nếu vắng khách và đang sợ mất tiền cọc",
+          sampleStudent: "thầy bắt cảnh chính chỉ dùng chính sử nên rất sợ nhầm chi tiết văn học vào"
         },
         {
           slot: "Q",
-          label: "Câu hỏi mấu chốt cần làm rõ (Điều quan trọng nhất mình cần tài liệu trả lời là gì?)",
-          hintAdult: "Gợi ý: nếu phải nghỉ ở tháng thứ 10 thì tổng cộng mình mất bao nhiêu tiền và phải thanh toán trong bao lâu",
-          hintStudent: "Gợi ý: chi tiết nào thuộc chính sử được đưa vào cảnh diễn chính, chi tiết nào là văn học cần tách ra lời bình cuối bài",
-          sampleAdult: "nếu buộc phải trả mặt bằng ở tháng thứ 10 thì tổng cộng mình thiệt hại bao nhiêu tiền và hạn chót thanh toán là mấy ngày",
-          sampleStudent: "những chi tiết nào về quả cam và lá cờ nằm trong chính sử để diễn cảnh chính, còn chi tiết nào là sáng tạo văn học phải tách riêng"
+          label: "Mình cần biết:... (Câu hỏi mấu chốt cần làm rõ)",
+          hintAdult: "Gợi ý: nếu nghỉ ở tháng thứ 10 thì tổng cộng mất những khoản gì",
+          hintStudent: "Gợi ý: chuyện vua ban quả cam và lá cờ chữ vàng có nằm trong chính sử không",
+          sampleAdult: "nếu nghỉ ở tháng thứ 10 thì tổng cộng mất những khoản gì",
+          sampleStudent: "chuyện vua ban quả cam và lá cờ chữ vàng có nằm trong chính sử không"
         }
       ],
       revealNote:
-        "Mẹo dùng ngay: Bấm nút “Sao chép câu lệnh” ở trên, mở Gemini (hoặc ChatGPT), đính kèm tệp PDF của bạn vào rồi dán câu lệnh này lên. Khi AI trả lời kèm số trang và gợi ý hướng xử lý, bạn nhớ mở đúng trang gốc kiểm lại rồi tự chốt quyết định cuối cùng nhé!"
+        "Mẹo nhớ cả đời không cần mở web: Chỉ cần nhẩm “Đang làm (S), nhưng vướng (C), cần biết (Q)? → Kèm số TRANG, chỉ chỗ SÓT, gợi ý & cùng BÀN!”"
     },
 
     // ==================== ACTIVITY 4: VERIFY SOURCE & OWN THE FINAL ANSWER ====================

@@ -1014,18 +1014,10 @@
     }
 
     function buildPromptText() {
-      const sVal = (aState.values[0] || "").trim() || "[Tài liệu đang cần xử lý]";
-      const cVal = (aState.values[1] || "").trim() || "[Hoàn cảnh & nỗi lo riêng của mình]";
-      const qVal = (aState.values[2] || "").trim() || "[Câu hỏi mấu chốt cần làm rõ]";
-      return [
-        `Mình đang cần xử lý: ${sVal}.`,
-        `Hoàn cảnh và nỗi lo riêng của mình là: ${cVal}.`,
-        `Câu hỏi mấu chốt mình cần làm rõ nhất là: ${qVal}?`,
-        ``,
-        `Nhờ bạn đọc kỹ toàn bộ tài liệu đính kèm (kể cả phụ lục) và hỗ trợ mình:`,
-        `1. Trả lời thẳng câu hỏi trên và chỉ thêm những góc khuất hoặc rủi ro liên quan đến hoàn cảnh của mình mà mình có thể chưa nghĩ tới — mỗi ý bắt buộc ghi rõ [Trang mấy / Điều mấy] trong bản gốc (chỗ nào tài liệu không đề cập thì nói rõ "Không có trong tài liệu", tuyệt đối không tự suy đoán).`,
-        `2. Cuối cùng, hãy gợi ý những hướng giải quyết phù hợp với hoàn cảnh của mình (nêu rõ ưu, nhược điểm từng hướng) và đặt 1–2 câu hỏi để thảo luận tiếp cùng tôi nhé!`
-      ].join("\n");
+      const sVal = (aState.values[0] || "").trim() || "[S]";
+      const cVal = (aState.values[1] || "").trim() || "[C]";
+      const qVal = (aState.values[2] || "").trim().replace(/\?+$/, "") || "[Q]";
+      return `Mình đang ${sVal}, nhưng ${cVal}. Mình cần biết: ${qVal}? Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.`;
     }
 
     const synBody = h("div", { className: "synthesis-body", style: "white-space:pre-line" });
@@ -1062,13 +1054,13 @@
       };
 
       synBody.replaceChildren(
-        "Mình đang cần xử lý: ",
-        slotNode(0, "[S - Việc trước mắt]"),
-        ".\nHoàn cảnh và nỗi lo riêng của mình là: ",
-        slotNode(1, "[C - Cái khó & nỗi lo riêng]"),
-        ".\nCâu hỏi mấu chốt mình cần làm rõ nhất là: ",
-        slotNode(2, "[Q - Câu hỏi mấu chốt]"),
-        "?\n\nNhờ bạn đọc kỹ toàn bộ tài liệu đính kèm (kể cả phụ lục) và hỗ trợ mình:\n1. Trả lời thẳng câu hỏi trên và chỉ thêm những góc khuất hoặc rủi ro liên quan đến hoàn cảnh của mình mà mình có thể chưa nghĩ tới — mỗi ý bắt buộc ghi rõ [Trang mấy / Điều mấy] trong bản gốc (chỗ nào tài liệu không đề cập thì nói rõ “Không có trong tài liệu”, tuyệt đối không tự suy đoán).\n2. Cuối cùng, hãy gợi ý những hướng giải quyết phù hợp với hoàn cảnh của mình (nêu rõ ưu, nhược điểm từng hướng) và đặt 1–2 câu hỏi để thảo luận tiếp cùng tôi nhé!"
+        "Mình đang ",
+        slotNode(0, "[S - đang làm gì]"),
+        ", nhưng ",
+        slotNode(1, "[C - vướng & lo gì]"),
+        ". Mình cần biết: ",
+        slotNode(2, "[Q - câu hỏi mấu chốt]"),
+        "? Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé."
       );
 
       const ready = isComplete();
@@ -1170,7 +1162,7 @@
       h(
         "div",
         { className: "live-synthesis-card" },
-        h("p", { className: "synthesis-kicker" }, "Câu lệnh hoàn chỉnh ghép từ S – C – Q của bạn (Dán vào Gemini / ChatGPT)"),
+        h("p", { className: "synthesis-kicker" }, "Câu lệnh bỏ túi: SCQ + Trang – Sót – Bàn (Dán vào Gemini / ChatGPT)"),
         synBody,
         h("div", { style: "display:flex;gap:0.65rem;flex-wrap:wrap" }, copyBtn, samplePdfLink)
       ),
@@ -1327,17 +1319,18 @@
             )
           )
         ),
-      hasFill &&
+      h(
+        "div",
+        { className: "live-synthesis-card" },
+        h("p", { className: "synthesis-kicker" }, "Công thức bỏ túi mang theo ra đời thật: SCQ + Trang – Sót – Bàn"),
         h(
-          "div",
-          { className: "live-synthesis-card" },
-          h("p", { className: "synthesis-kicker" }, "Khung SCQ bạn đã thiết lập ở Bài tập 3"),
-          h(
-            "p",
-            { className: "synthesis-body" },
-            `• (S) Việc trước mắt: ${fillVals[0] || "..."}\n• (C) Cái khó & nỗi lo riêng: ${fillVals[1] || "..."}\n• (Q) Câu hỏi mấu chốt: ${fillVals[2] || "..."}?`
-          )
+          "p",
+          { className: "synthesis-body" },
+          hasFill
+            ? `“Mình đang ${fillVals[0] || "[S]"}, nhưng ${fillVals[1] || "[C]"}. Mình cần biết: ${(fillVals[2] || "[Q]").replace(/\?+$/, "")}? Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.”`
+            : "“Mình đang [S], nhưng [C]. Mình cần biết: [Q]? Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.”"
         )
+      )
     );
 
     const sortedPDFs = [...DATA.caseFiles].sort((a, b) =>
