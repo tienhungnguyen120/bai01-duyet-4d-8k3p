@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi" data-palette="anthropic">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Bài 01 · Đọc sâu tài liệu dài & Bắt bẫy ngầm cùng AI</title>
+  <meta name="description" content="Bài 01: Học theo từng chặng lật trang — Tình huống thực tế, Quy luật Tư duy 4D và 4 bài tập rèn mạch suy nghĩ độc lập." />
+  <script>
+    try {
+      const valid = ["anthropic", "minerva", "brilliant", "sutd"];
+      const savedPalette = localStorage.getItem("bai01-palette");
+      const showThemes = location.search.includes("themes=1");
+      document.documentElement.dataset.palette = (showThemes && valid.includes(savedPalette)) ? savedPalette : "anthropic";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="lesson-data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#stage-main">Chuyển tới nội dung chính</a>
+
+  <header class="player-header">
+    <div class="player-header-inner">
+      <div class="header-left">
+        <button type="button" id="home-chip-btn" class="lesson-chip" title="Về màn chọn tình huống">BÀI 01</button>
+        <button type="button" id="track-switch-btn" class="track-pill-btn" hidden></button>
+      </div>
+
+      <div id="header-progress-wrap" class="step-progress-wrap" hidden>
+        <div id="step-segments" class="step-segments" role="navigation" aria-label="Tiến độ các trang trong bài"></div>
+        <div class="step-progress-caption">
+          <span id="step-caption-left">Bước 1 / 7</span>
+          <span id="step-caption-right">Tình huống thực tế</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="palette-switcher" role="group" aria-label="Chọn hệ màu trường đào tạo hiện đại" hidden>
+          <span class="palette-label">Gu màu:</span>
+          <button type="button" class="swatch-btn swatch-anthropic active" data-swatch="anthropic" title="1. Anthropic Academy (Ivory · Obsidian · Terracotta)">Anthropic</button>
+          <button type="button" class="swatch-btn swatch-minerva" data-swatch="minerva" title="2. Minerva University (Warm Stone · Charcoal · Crimson)">Minerva</button>
+          <button type="button" class="swatch-btn swatch-brilliant" data-swatch="brilliant" title="3. Brilliant × Koto (Crisp Chalk · Carbon · Electric Pear)">Brilliant</button>
+          <button type="button" class="swatch-btn swatch-sutd" data-swatch="sutd" title="4. Maven & SUTD × MIT (Alabaster · Oxford Navy · Vermilion)">MIT·SUTD</button>
+        </div>
+        <script>if (location.search.includes("themes=1")) { const sw = document.querySelector(".palette-switcher"); if (sw) sw.hidden = false; }</script>
+        <button type="button" id="export-btn" class="icon-tool-btn" title="Tải tệp lưu bài làm (.json)">Sao lưu</button>
+        <button type="button" id="reset-btn" class="icon-tool-btn" title="Làm lại từ đầu">Làm mới</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="stage-main" class="stage-viewport" tabindex="-1"></main>
+
+  <footer id="step-dock" class="step-dock" hidden>
+    <div class="step-dock-inner">
+      <button type="button" id="dock-prev-btn" class="btn-secondary">← Quay lại</button>
+      <span id="dock-status" class="dock-status"></span>
+      <button type="button" id="dock-next-btn" class="btn-tactile">Tiếp tục →</button>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
