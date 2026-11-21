@@ -17,8 +17,8 @@
     { num: 4, short: "Bài tập 2", label: "Phân biệt & Bắt bệnh S – C – Q" },
     { num: 5, short: "Bài tập 3", label: "Tự nhớ & Ghép lệnh S – C – Q" },
     { num: 6, short: "Bài tập 4", label: "Mở trang gốc & Tự chốt chữ A" },
-    { num: 7, short: "Tổng kết", label: "Ôn nhanh S–C–Q & Hồ sơ PDF" },
-    { num: 8, short: "Về nhà · 4F", label: "Bài tập về nhà · Suy ngẫm 4F" }
+    { num: 7, short: "Về nhà · 4F", label: "Bài tập về nhà · Suy ngẫm 4F" },
+    { num: 8, short: "Tổng kết", label: "Ôn nhanh S–C–Q & Hồ sơ PDF" }
   ];
   const TOTAL_STEPS = STEPS_META.length;
 
@@ -1284,12 +1284,8 @@
         statusText: rdy
           ? "Đã mở khóa trọn bộ S – C – Q – A & Quy luật 4D!"
           : "Điền kết quả kiểm trang gốc, tự chốt chữ A & tick cam kết",
-        nextLabel: "Hoàn thành & Xem Tổng kết →",
-        onNext: () => {
-          if (rdy) tProg.doneSteps[7] = true;
-          saveState();
-          goTo(scenarioId, 7);
-        },
+        nextLabel: "Tiếp tục sang Bài về nhà 4F →",
+        onNext: () => goTo(scenarioId, 7),
         nextSuccess: rdy,
         pulse: rdy
       });
@@ -1412,12 +1408,12 @@
     updateStatus();
   }
 
-  // ==================== STEP 7: SUMMARY + 3-SLOT ACTIVE RECALL + PDF CASE FILES ====================
-  function renderStep7Summary(container, scenarioId, tProg) {
-    tProg.doneSteps[7] = true;
+  // ==================== STEP 8: SUMMARY + 3-SLOT ACTIVE RECALL + PDF CASE FILES ====================
+  function renderStep8Summary(container, scenarioId, tProg) {
+    tProg.doneSteps[8] = true;
     if (!Array.isArray(tProg.recallVals)) tProg.recallVals = ["", "", ""];
     saveState();
-    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
+    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 8 });
 
     const exSteps = [3, 4, 5, 6];
     const doneEx = exSteps.filter(n => !!tProg.doneSteps[n]);
@@ -1622,17 +1618,16 @@
     container.append(summaryCard, recallHost, pdfSection);
 
     configureDock({
-      prevLabel: "← Bài tập 4",
-      onPrev: () => goTo(scenarioId, 6),
-      statusText: "Bước cuối: Áp dụng vào việc thật & viết suy ngẫm 4F",
-      nextLabel: "Bài tập về nhà (Viết 4F) →",
-      onNext: () => goTo(scenarioId, 8),
-      pulse: true
+      prevLabel: "← Trang 7: Về nhà · 4F",
+      onPrev: () => goTo(scenarioId, 7),
+      statusText: "Bạn cũng có thể khám phá thêm hành trình còn lại",
+      nextLabel: `Xem thêm ${otherSc.badge} →`,
+      onNext: () => goTo(otherId, 1)
     });
   }
 
-  // ==================== STEP 8: HOMEWORK 4F (SINGLE SHEET WITH GHOST EXAMPLES) ====================
-  function renderStep8Homework4F(container, scenarioId, tProg) {
+  // ==================== STEP 7: HOMEWORK 4F (SINGLE SHEET WITH GHOST EXAMPLES) ====================
+  function renderStep7Homework4F(container, scenarioId, tProg) {
     const hw = DATA.homework4F;
     if (!hw) return;
 
@@ -1640,8 +1635,6 @@
       tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
     }
     const bag = tProg.fourF;
-    const otherId = scenarioId === "adult" ? "student" : "adult";
-    const otherSc = DATA.scenarios[otherId];
     const isStudent = scenarioId === "student";
     const taskText = isStudent ? hw.taskStudent : hw.taskAdult;
 
@@ -1663,19 +1656,25 @@
 
     function syncDoneAndDock() {
       const any = hasAnyText();
-      if (any && !tProg.doneSteps[8]) {
-        tProg.doneSteps[8] = true;
+      if (any && !tProg.doneSteps[7]) {
+        tProg.doneSteps[7] = true;
         saveState();
-        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 8 });
+        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
       }
       configureDock({
-        prevLabel: "← Trang 7: Tổng kết",
-        onPrev: () => goTo(scenarioId, 7),
+        prevLabel: "← Trang 6: Bài tập 4",
+        onPrev: () => goTo(scenarioId, 6),
         statusText: any
           ? "Đã lưu bài suy ngẫm 4F vào trình duyệt!"
-          : "Bạn cũng có thể khám phá thêm hành trình còn lại",
-        nextLabel: `Xem thêm ${otherSc.badge} →`,
-        onNext: () => goTo(otherId, 1)
+          : "Áp dụng vào việc thật rồi ghi suy ngẫm 4F tại đây",
+        nextLabel: "Hoàn thành & Xem Tổng kết →",
+        onNext: () => {
+          tProg.doneSteps[8] = true;
+          saveState();
+          goTo(scenarioId, 8);
+        },
+        nextSuccess: any,
+        pulse: any
       });
     }
 
@@ -1781,9 +1780,9 @@
                     tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
                     Object.assign(bag, tProg.fourF);
                     tProg.peekFourFExample = false;
-                    delete tProg.doneSteps[8];
+                    delete tProg.doneSteps[7];
                     saveState();
-                    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 8 });
+                    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
                     syncDoneAndDock();
                     drawSheet();
                   }
@@ -1872,8 +1871,8 @@
       if (route.step === 1) renderStep1Scenario(screenWrap, route.scenario, tProg);
       else if (route.step === 2) renderStep2FourD(screenWrap, route.scenario, tProg);
       else if (route.step >= 3 && route.step <= 6) renderActivityByStep(screenWrap, route.scenario, tProg, route.step);
-      else if (route.step === 7) renderStep7Summary(screenWrap, route.scenario, tProg);
-      else renderStep8Homework4F(screenWrap, route.scenario, tProg);
+      else if (route.step === 7) renderStep7Homework4F(screenWrap, route.scenario, tProg);
+      else renderStep8Summary(screenWrap, route.scenario, tProg);
     }
 
     stage.replaceChildren(screenWrap);

@@ -66,7 +66,7 @@
         title: "Chủ nhà giục ký hợp đồng 12 trang lúc 3h chiều — Mà vốn của bạn chỉ đủ trụ 10 tháng!",
         desc: "Thực chiến nối 3 trang hợp đồng rời rạc trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
         duration: "02:30",
-        journeyMeta: "2 video ngắn · 4 bài tập 4D × SCQ",
+        journeyMeta: "2 video ngắn · 4 bài tập + Bài về nhà 4F",
         videoSrc: "media/tinh-huong-1-hop-dong.mp4",
         posterSrc: "media/poster-hop-dong.jpg",
         segments: [
@@ -162,7 +162,7 @@
         title: "Nhóm lớp 8A2 mãi đỉnh ❤️ nhận tệp Sử 12 trang — Cảnh chính chỉ được diễn chính sử!",
         desc: "Thực chiến lọc chính sử Đại Việt sử ký toàn thư và chi tiết văn học trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
         duration: "02:48",
-        journeyMeta: "2 video ngắn · 4 bài tập 4D × SCQ",
+        journeyMeta: "2 video ngắn · 4 bài tập + Bài về nhà 4F",
         videoSrc: "media/tinh-huong-2-lich-su.mp4",
         posterSrc: "media/poster-lich-su.jpg",
         segments: [
