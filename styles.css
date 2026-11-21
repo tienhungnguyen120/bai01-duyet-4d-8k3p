@@ -1530,3 +1530,121 @@ button:disabled {
     justify-content: space-between;
   }
 }
+
+/* ==================== 2-PILLAR SPINE STRIP (4D × S-C-Q) & VERIFY CARD ==================== */
+.spine-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0 0 1.05rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+
+.spine-node {
+  flex: 1 1 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.48rem 0.72rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-subtle);
+  border: 1px solid transparent;
+  opacity: 0.62;
+  transition: opacity 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.spine-node.active {
+  opacity: 1;
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+
+.spine-step {
+  font-size: 0.83rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.spine-node.active .spine-step {
+  color: var(--accent-text);
+}
+
+.spine-sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.spine-arrow {
+  font-weight: 700;
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 680px) {
+  .spine-arrow {
+    display: none;
+  }
+}
+
+.scenario-brief-box {
+  margin-bottom: 0.95rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.verify-draft-card {
+  margin-bottom: 1.15rem;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--border-strong);
+}
+
+.verify-draft-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.verify-badge {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-text);
+}
+
+.verify-quote {
+  margin: 0;
+  padding: 0.72rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border-left: 3px solid var(--accent-text);
+  font-size: 0.91rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.verify-hint {
+  margin: 0.55rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
