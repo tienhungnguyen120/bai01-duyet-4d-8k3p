@@ -37,7 +37,7 @@
     lessonCode: "BÀI 01",
     lessonTitle: "Tóm tắt tài liệu dài cùng Gemini",
     lessonLead:
-      "Kết hợp hai trụ cột cốt lõi: Quy luật Tư duy 4D (Mình nghĩ trước – AI làm cùng – Mình kiểm cuối) và Công thức nghĩ trước S (Situation · Hoàn cảnh) – C (Complication · Cái khó) – Q (Question · Câu hỏi).",
+      "Kết hợp hai bộ khung nổi tiếng: Khung làm chủ AI 4 Chữ D của Anthropic (gói gọn 3 bước: Mình nghĩ trước – AI làm cùng – Mình kiểm cuối) và Khuôn nghĩ trước S – C – Q của McKinsey: S (Situation · Hoàn cảnh) – C (Complication · Cái khó) – Q (Question · Câu hỏi).",
     promptTail: PROMPT_TAIL,
     scqMeta: SCQ_META,
 
@@ -64,47 +64,53 @@
         badge: "Tình huống 1 · Người lớn",
         shortName: "Tóm tắt hợp đồng thuê mặt bằng",
         title: "Chủ nhà giục ký hợp đồng 12 trang lúc 3h chiều — Mà vốn của bạn chỉ đủ trụ 10 tháng!",
-        desc: "Thực chiến nối 3 trang hợp đồng rời rạc trên màn hình Gemini thật bằng công thức S (Hoàn cảnh) – C (Cái khó) – Q (Câu hỏi).",
-        duration: "01:42",
+        desc: "Thực chiến nối 3 trang hợp đồng rời rạc trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
+        duration: "02:30",
         journeyMeta: "2 video ngắn · 4 bài tập 4D × SCQ",
         videoSrc: "media/tinh-huong-1-hop-dong.mp4",
         posterSrc: "media/poster-hop-dong.jpg",
         segments: [
           {
-            time: 2.35,
+            time: 2.25,
             ts: "00:02",
-            label: "Tin nhắn giục ký & Cái khó vốn chỉ đủ 10 tháng",
-            text: "Chủ nhà vừa gửi tệp hợp đồng 12 trang, giục 3 giờ chiều nay ký. Mà vốn của bạn chỉ đủ 10 tháng."
+            label: "Tin nhắn giục ký 3h chiều & Câu lửng “nhưng...”",
+            text: "Chủ nhà vừa gửi hợp đồng 12 trang, giục 3 giờ chiều nay ký — mà vốn của bạn chỉ đủ 10 tháng. Chỉ còn vài tiếng, nên bạn muốn dùng AI tóm tắt cho nhanh, nhưng..."
           },
           {
-            time: 9.73,
-            ts: "00:09",
-            label: "Ba trang hợp đồng rải rác nối thành bẫy gần 200 triệu",
-            text: "Trải ra bàn: Trang 3 ghi nghỉ sớm mất cọc 75 triệu. Trang 4, nghỉ trước 24 tháng phải đền gói cải tạo. Trang 12, nộp bồi thường thiết bị trong 5 ngày. Đọc riêng đều ổn — nhưng nối cả ba với 10 tháng vốn: nghỉ ở tháng 10, bạn mất gần 200 triệu!"
+            time: 12.65,
+            ts: "00:12",
+            label: "Bản đồ Bài 01 (Lần 1): 4D (Anthropic) × S – C – Q (McKinsey)",
+            text: "…hỏi “tóm tắt” và hỏi đúng cách sẽ ra hai câu trả lời rất khác! Một là khung làm chủ AI 4 chữ D của Anthropic — hãng làm ra Claude — gói gọn ba bước: Mình nghĩ trước, AI làm cùng, và Mình kiểm cuối. Hai là khuôn S – C – Q của McKinsey: S là Situation (Hoàn cảnh); C là Complication (Cái khó); và Q là Question (Câu hỏi)."
           },
           {
-            time: 27.48,
-            ts: "00:27",
-            label: "Vì sao hỏi “Tóm tắt thành bảng” không nối các điều khoản lại?",
-            text: "Nhờ AI tóm tắt, nó chép đủ cả ba dòng — nhưng không nối lại. Vì bạn chỉ bảo nó tóm tắt, chứ chưa kể bạn chỉ có 10 tháng vốn."
+            time: 44.71,
+            ts: "00:44",
+            label: "✕ Cách 1: Hỏi “Tóm tắt thành bảng” — Bảng đẹp mượt khiến dễ yên tâm ký",
+            text: "Cách 1: Quăng thẳng hợp đồng vào Gemini rồi bảo “Tóm tắt hợp đồng này thành bảng”. Bảng hiện ra rất đẹp, ghi đủ tiền cọc 75 triệu, hỗ trợ cải tạo 37,5 triệu, không sai một chữ nào!"
           },
           {
-            time: 36.0,
-            ts: "00:36",
-            label: "Công thức nghĩ trước 3 chữ S – C – Q + Trang – Sót – Bàn",
-            text: "Hãy mở Gemini, bấm dấu + gửi hợp đồng lên, rồi nghĩ trước theo công thức ba chữ S – C – Q: S (Situation – Hoàn cảnh): mình đang xem hợp đồng thuê mặt bằng mở quán 12 trang; C (Complication – Cái khó): nhưng vốn mình chỉ trụ được 10 tháng nếu vắng khách; Q (Question – Câu hỏi): mình cần biết nếu nghỉ ở tháng thứ 10 thì tổng cộng mất bao nhiêu tiền? Cuối cùng dặn thêm: Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé."
+            time: 55.53,
+            ts: "00:55",
+            label: "Cú lật 3 trang gốc: Nối Trang 3 + 4 + 12 lộ bẫy gần 200 triệu!",
+            text: "Nhưng khoan ký vội! Mở bản gốc nối ba nơi: Trang 3 mất cọc 75 triệu; Trang 4 đền gói cải tạo 37,5 triệu; và tận Phụ lục Trang 12 phạt thêm thiết bị 85 triệu. Nghỉ ở tháng thứ 10 là mất gần 200 triệu — điều bảng tóm tắt rời rạc ở Cách 1 hoàn toàn bỏ lọt!"
           },
           {
-            time: 64.63,
-            ts: "01:04",
-            label: "Kết quả thật từ Gemini: Cảnh báo ngay dòng đầu & Nối ra 197,5 triệu",
-            text: "Nhìn kết quả thật Gemini trả về: ngay dòng đầu tiên, AI cảnh báo thẳng “Tuyệt đối không nên ký!”. Bên dưới, chính AI tự nối Trang 3, Trang 4 và Trang 12 ra gần 200 triệu (197,5 triệu); chỉ thêm chỗ dễ sót ở Trang 2: cấm tự ý sang nhượng quán; rồi gợi ý sẵn các điểm cần đàm phán sửa lại trước khi ký."
+            time: 77.89,
+            ts: "01:17",
+            label: "✓ Cách 2 Bước 1 (Nhắc lại S – C – Q lần 2) + Trang – Sót – Bàn",
+            text: "Mở Gemini bấm dấu + gửi hợp đồng lên, rồi nghĩ trước theo S – C – Q: S là Situation (Hoàn cảnh) — mình đang xem hợp đồng thuê mặt bằng mở quán 12 trang; C là Complication (Cái khó) — nhưng vốn mình chỉ trụ được 10 tháng nếu vắng khách; Q là Question (Câu hỏi) — nghỉ ở tháng thứ 10 thì tổng cộng mất bao nhiêu tiền? Cuối cùng dặn thêm: trả lời kèm số trang, chỉ thêm chỗ dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé."
           },
           {
-            time: 85.25,
-            ts: "01:25",
-            label: "Mở trang gốc kiểm chứng & Quy tắc vàng",
-            text: "Cuối cùng, mở đúng Trang 2, 3, 4 và 12 trên bản gốc để tự đọc lại cho chắc chắn. Hãy nhớ: Hỏi tóm tắt chỉ biết hợp đồng viết gì; kể hoàn cảnh S – C – Q mới biết hợp đồng sẽ làm gì với bạn. AI nháp — mình kiểm — mình chốt!"
+            time: 109.89,
+            ts: "01:49",
+            label: "✓ Cách 2 Bước 2 (AI làm cùng): Cảnh báo dòng đầu & Tự nối 197,5 triệu",
+            text: "Ngay dòng đầu tiên, Gemini cảnh báo thẳng “Tuyệt đối không nên ký!”. Bên dưới, chính AI tự nối Trang 3, Trang 4 và Trang 12 ra gần 200 triệu (197,5 triệu); chỉ thêm chỗ dễ sót ở Trang 2 (cấm tự ý sang nhượng); rồi gợi ý sẵn các điểm cần đàm phán sửa lại."
+          },
+          {
+            time: 130.5,
+            ts: "02:10",
+            label: "✓ Cách 2 Bước 3 (Kiểm trang gốc & Nhắc lại 4D lần 2)",
+            text: "Cuối cùng, mở đúng Trang 2, 3, 4 và 12 trên bản gốc để tự đọc lại cho chắc chắn. Hãy nhớ nhé: Hỏi tóm tắt chỉ biết hợp đồng viết gì; còn đi đủ ba bước của 4 chữ D — Mình nghĩ trước, AI làm cùng, và Mình kiểm cuối — mới biết hợp đồng sẽ làm gì với bạn!"
           }
         ],
         fourD: {
@@ -154,8 +160,8 @@
         badge: "Tình huống 2 · Học sinh",
         shortName: "Tóm tắt tư liệu môn Lịch sử",
         title: "Nhóm lớp 8A2 mãi đỉnh ❤️ nhận tệp Sử 12 trang — Cảnh chính chỉ được diễn chính sử!",
-        desc: "Thực chiến lọc chính sử Đại Việt sử ký toàn thư và chi tiết văn học trên màn hình Gemini thật bằng công thức S (Hoàn cảnh) – C (Cái khó) – Q (Câu hỏi).",
-        duration: "01:58",
+        desc: "Thực chiến lọc chính sử Đại Việt sử ký toàn thư và chi tiết văn học trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
+        duration: "02:48",
         journeyMeta: "2 video ngắn · 4 bài tập 4D × SCQ",
         videoSrc: "media/tinh-huong-2-lich-su.mp4",
         posterSrc: "media/poster-lich-su.jpg",
@@ -163,38 +169,44 @@
           {
             time: 2.35,
             ts: "00:02",
-            label: "Tin nhắn nhóm lớp 8A2 mãi đỉnh ❤️ & Cái khó của đề bài",
-            text: "Thầy dạy Sử vừa gửi vào nhóm lớp “8A2 mãi đỉnh ❤️” tệp tư liệu dày 12 trang về Trần Quốc Toản, dặn thứ Hai diễn kịch 3 phút. Nhưng thầy bắt buộc: cảnh chính chỉ dùng chính sử, còn chi tiết văn học phải tách riêng."
+            label: "Tin nhắn nhóm lớp 8A2 mãi đỉnh ❤️ & Câu lửng “nhưng...”",
+            text: "Thầy dạy Sử vừa gửi vào nhóm lớp “8A2 mãi đỉnh ❤️” tập tư liệu Trần Quốc Toản 12 trang, dặn thứ Hai diễn kịch 3 phút — mà cảnh chính chỉ được dùng chính sử, chi tiết văn học phải tách riêng. Chỉ còn một tối, nên bạn muốn dùng AI tóm tắt cho nhanh, nhưng..."
           },
           {
-            time: 13.5,
-            ts: "00:13",
-            label: "Ba trang tư liệu vạch ranh giới Chính sử và Tiểu thuyết",
-            text: "Trải tư liệu ra bàn: Trang 3 ghi sự kiện diễn ra ở Hội nghị Bình Than năm 1282. Trang 4, chính sử Đại Việt sử ký toàn thư chỉ chép Quốc Toản tự cầm cam bóp nát và viết sáu chữ lên cờ. Còn Trang 8 chỉ rõ cảnh vua ban cam quý và mẹ thêu cờ vàng là tiểu thuyết. Nếu quen miệng diễn Diên Hồng hay vua bước ra ban cam là dính ngay 2 lỗi sai trước lớp!"
+            time: 16.68,
+            ts: "00:16",
+            label: "Bản đồ Bài 01 (Lần 1): 4D (Anthropic) × S – C – Q (McKinsey)",
+            text: "…hỏi “tóm tắt” và hỏi đúng cách sẽ ra hai câu trả lời rất khác! Một là khung làm chủ AI 4 chữ D của Anthropic — hãng làm ra Claude — gói gọn ba bước: Mình nghĩ trước, AI làm cùng, và Mình kiểm cuối. Hai là khuôn S – C – Q của McKinsey: S là Situation (Hoàn cảnh); C là Complication (Cái khó); và Q là Question (Câu hỏi)."
           },
           {
-            time: 36.66,
-            ts: "00:36",
-            label: "Vì sao bảng tóm tắt chung chung không vạch ranh giới kịch?",
-            text: "Nhờ AI tóm tắt, nó chép đủ từng phần — nhưng không vạch ranh giới cho vở kịch. Vì bạn chỉ bảo nó tóm tắt, chứ chưa kể yêu cầu gắt gao của thầy."
+            time: 48.53,
+            ts: "00:48",
+            label: "✕ Cách 1: Hỏi “Tóm tắt thành bảng” — Bảng đẹp mượt dễ làm chủ quan",
+            text: "Cách 1: Quăng thẳng tư liệu vào Gemini rồi bảo “Tóm tắt tập tư liệu này thành bảng”. Bảng hiện ra rất đẹp, chia đủ các phần chính sử và văn học, không sai một chữ nào!"
           },
           {
-            time: 45.78,
-            ts: "00:45",
-            label: "Công thức nghĩ trước 3 chữ S – C – Q + Trang – Sót – Bàn",
-            text: "Hãy mở Gemini, bấm dấu + gửi tệp tư liệu lên, rồi nghĩ trước theo công thức ba chữ S – C – Q: S (Situation – Hoàn cảnh): mình đang viết kịch bản đóng vai 3 phút về Trần Quốc Toản từ tập tư liệu thầy phát; C (Complication – Cái khó): nhưng thầy bắt cảnh chính chỉ dùng chính sử còn chi tiết văn học phải tách riêng; Q (Question – Câu hỏi): mình cần biết chi tiết nào được đưa vào cảnh diễn, chi tiết nào phải tách riêng? Cuối cùng dặn thêm: Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình."
+            time: 59.48,
+            ts: "00:59",
+            label: "Cú lật 3 trang gốc: Nối Trang 3 + 4 + 8 lộ 2 lỗi sai sử liệu trước lớp!",
+            text: "Nhưng khoan viết kịch bản vội! Mở bản gốc nối ba nơi: Trang 3 ghi Hội nghị Bình Than (1282); Trang 4 chỉ chép Quốc Toản tự cầm cam bóp nát và viết 6 chữ lên cờ; còn Trang 8 chỉ rõ vua ban cam quý và mẹ thêu cờ vàng là tiểu thuyết. Quen miệng diễn Diên Hồng hay vua ban cam là dính ngay 2 lỗi sai trước lớp!"
           },
           {
-            time: 76.97,
-            ts: "01:17",
-            label: "Kết quả thật từ Gemini: Bảng tách 2 cột & Điểm mù Trần Kiện",
-            text: "Nhìn kết quả thật Gemini trả về: ngay mục đầu, AI kẻ bảng tách rạch ròi chính sử (Trang 3, 4) với văn học (Trang 8). Bên dưới, AI chỉ điểm mù dễ sót: nhân vật đối trọng Trần Kiện ở Trang 4 và Trang 10, cùng bẫy nhầm tuổi giữa năm 1282 và 1285; rồi gợi ý sẵn bố cục kịch 3 phút kèm câu hỏi thảo luận tiếp."
+            time: 90.62,
+            ts: "01:30",
+            label: "✓ Cách 2 Bước 1 (Nhắc lại S – C – Q lần 2) + Trang – Sót – Bàn",
+            text: "Mở Gemini bấm dấu + gửi tệp tư liệu lên, rồi nghĩ trước theo S – C – Q: S là Situation (Hoàn cảnh) — mình đang viết kịch bản đóng vai 3 phút về Trần Quốc Toản từ tập tư liệu thầy phát; C là Complication (Cái khó) — nhưng thầy bắt cảnh chính chỉ dùng chính sử còn chi tiết văn học phải tách riêng; Q là Question (Câu hỏi) — chi tiết nào đưa vào cảnh diễn, chi tiết nào phải tách riêng? Cuối cùng dặn thêm: trả lời kèm số trang, chỉ thêm chỗ dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé."
           },
           {
-            time: 100.96,
-            ts: "01:41",
-            label: "Mở trang gốc kiểm lại & Quy tắc vàng",
-            text: "Cuối cùng, mở đúng Trang 3, 4, 8 và 11 trên bản gốc để tự đọc kiểm lại từng dòng. Hãy nhớ: Hỏi tóm tắt chỉ biết tư liệu viết gì; kể hoàn cảnh S – C – Q mới biết dùng được gì cho bài của bạn. AI nháp — mình kiểm — mình chốt!"
+            time: 124.58,
+            ts: "02:04",
+            label: "✓ Cách 2 Bước 2 (AI làm cùng): Bảng tách 2 cột & Điểm mù Trần Kiện",
+            text: "Ngay mục đầu, Gemini kẻ bảng tách rạch ròi chính sử (Trang 3, 4) với văn học (Trang 8). Bên dưới, AI chỉ điểm mù dễ sót: nhân vật đối trọng Trần Kiện ở Trang 4 và Trang 10, cùng bẫy nhầm tuổi 1282 vs 1285; rồi gợi ý sẵn bố cục kịch 3 phút kèm câu hỏi thảo luận tiếp."
+          },
+          {
+            time: 148.62,
+            ts: "02:28",
+            label: "✓ Cách 2 Bước 3 (Kiểm trang gốc & Nhắc lại 4D lần 2)",
+            text: "Cuối cùng, mở đúng Trang 3, 4, 8 và 11 trên bản gốc để tự đọc lại cho chắc chắn. Hãy nhớ nhé: Hỏi tóm tắt chỉ biết tư liệu viết gì; còn đi đủ ba bước của 4 chữ D — Mình nghĩ trước, AI làm cùng, và Mình kiểm cuối — mới biết dùng được gì cho bài của bạn!"
           }
         ],
         fourD: {
