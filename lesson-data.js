@@ -34,7 +34,7 @@
 
   window.LESSON_01_DATA = {
     courseTitle: "Giáo trình Tư duy & Làm chủ AI",
-    lessonCode: "BÀI 01",
+    lessonCode: "BÀI 01 · NGHĨ TRƯỚC KHI HỎI AI",
     lessonTitle: "Tóm tắt tài liệu dài cùng Gemini",
     lessonLead:
       "Kết hợp hai bộ khung nổi tiếng: Khung làm chủ AI 4 Chữ D của Anthropic (gói gọn 3 bước: Mình nghĩ trước – AI làm cùng – Mình kiểm cuối) và Khuôn nghĩ trước S – C – Q của McKinsey: S (Situation · Hoàn cảnh) – C (Complication · Cái khó) – Q (Question · Câu hỏi).",

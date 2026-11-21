@@ -274,6 +274,13 @@ button:disabled {
   color: var(--cta-fg);
   letter-spacing: 0.04em;
   border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .chip-sub-hide {
+    display: none;
+  }
 }
 
 .track-pill-btn {

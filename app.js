@@ -318,14 +318,14 @@
         h(
           "div",
           { className: "welcome-hero" },
-          h("span", { className: "welcome-kicker" }, "BÀI 01 · TƯ DUY 4D × S (HOÀN CẢNH) · C (CÁI KHÓ) · Q (CÂU HỎI)"),
+          h("span", { className: "welcome-kicker" }, "BÀI 01 · NGHĨ TRƯỚC KHI HỎI AI"),
           h("h1", { className: "welcome-title" }, "Tóm tắt tài liệu dài cùng Gemini"),
           h(
             "p",
             { className: "welcome-sub" },
-            "Hỏi “Tóm tắt” chỉ biết tài liệu viết gì — nghĩ trước bằng ",
+            "Hỏi “tóm tắt”, AI chỉ kể tài liệu viết gì — nghĩ trước ",
             h("span", { className: "marker-sweep" }, "S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"),
-            " mới biết bạn mất gì, dùng được gì!"
+            ", AI mới chỉ ra bạn mất gì, dùng được gì!"
           )
         ),
         h("p", { className: "journey-section-label" }, "Chọn hành trình gần với bạn nhất để bắt đầu:"),
@@ -1536,7 +1536,7 @@
       "section",
       { className: "summary-hero-card" },
       h("span", { className: "completion-badge" }, `✓ ĐÃ HOÀN TẤT ${doneEx.length}/4 BÀI TẬP 4D × SCQ`),
-      h("h1", { className: "step-title", tabindex: "-1" }, "Tổng kết Bài 01 · Quy luật 4D × S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"),
+      h("h1", { className: "step-title", tabindex: "-1" }, "Tổng kết Bài 01 · Nghĩ trước khi hỏi AI"),
       h(
         "p",
         { className: "step-lead" },
