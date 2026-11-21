@@ -4,7 +4,7 @@
   const DATA = window.LESSON_01_DATA;
   if (!DATA) return;
 
-  const STORAGE_KEY = "bai01-pageturn-state-v3";
+  const STORAGE_KEY = "bai01-pageturn-state-v4";
   const PALETTE_KEY = "bai01-palette";
   const PROMPT_TAIL =
     DATA.promptTail ||
@@ -13,11 +13,11 @@
   const STEPS_META = [
     { num: 1, short: "Tình huống", label: "Clip Thực chiến trên Gemini thật" },
     { num: 2, short: "Quy luật 4D", label: "Clip Quy luật Tư duy 4D" },
-    { num: 3, short: "Bài tập 1", label: "Chia việc đúng vai theo 4D" },
-    { num: 4, short: "Bài tập 2", label: "Soi lỗi khuyết mảnh S – C – Q" },
-    { num: 5, short: "Bài tập 3", label: "Ghép câu lệnh S – C – Q + Trang – Sót – Bàn" },
-    { num: 6, short: "Bài tập 4", label: "Mở trang gốc bắt lỗi & Tự chốt" },
-    { num: 7, short: "Tổng kết", label: "Hoàn thành & Hồ sơ PDF 12 trang" }
+    { num: 3, short: "Bài tập 1", label: "Phân vai đúng theo Quy luật 4D" },
+    { num: 4, short: "Bài tập 2", label: "Phân biệt & Bắt bệnh S – C – Q" },
+    { num: 5, short: "Bài tập 3", label: "Tự nhớ & Ghép lệnh S – C – Q" },
+    { num: 6, short: "Bài tập 4", label: "Mở trang gốc & Tự chốt chữ A" },
+    { num: 7, short: "Tổng kết", label: "Ôn nhanh S–C–Q & Hồ sơ PDF" }
   ];
 
   const defaultTrackProgress = () => ({
@@ -25,6 +25,8 @@
     visited: {},
     doneSteps: {},
     transcriptOpen: { scenario: false, fourD: false },
+    recallChecked: false,
+    recallVals: ["", "", ""],
     acts: {}
   });
 
@@ -226,13 +228,13 @@
     }
   }
 
-  // ==================== 2-PILLAR SPINE STRIP (4D × S-C-Q) ====================
+  // ==================== 2-PILLAR SPINE STRIP & 3-COLOR SCQ LEGEND ====================
   function renderSpineStrip(activeIndices = []) {
     const pillars = DATA.spinePillars || [];
     if (!pillars.length) return null;
     return h(
       "div",
-      { className: "spine-strip", "aria-label": "Trục kết nối Quy luật 4D và Khuôn S – C – Q" },
+      { className: "spine-strip", "aria-label": "Trục kết nối Quy luật 4D và Công thức S – C – Q" },
       ...pillars.map((p, idx) => {
         const isActive = activeIndices.includes(idx);
         return [
@@ -245,6 +247,33 @@
           )
         ];
       })
+    );
+  }
+
+  function renderScqLegend() {
+    const meta = DATA.scqMeta || [];
+    if (!meta.length) return null;
+    return h(
+      "div",
+      { className: "scq-legend-grid", "aria-label": "Bảng giải nghĩa công thức S – C – Q" },
+      ...meta.map(m =>
+        h(
+          "div",
+          { className: `scq-legend-card scq-${m.color}` },
+          h(
+            "div",
+            { className: "scq-legend-top" },
+            h(
+              "span",
+              { className: "scq-legend-title" },
+              h("span", { className: `scq-letter-chip chip-${m.color}` }, m.code),
+              h("span", null, `${m.en} · `, h("strong", null, m.vi.toUpperCase()))
+            ),
+            h("span", { className: "scq-signal-tag" }, m.signal)
+          ),
+          h("p", { className: "scq-legend-desc" }, m.desc)
+        )
+      )
     );
   }
 
@@ -289,13 +318,13 @@
         h(
           "div",
           { className: "welcome-hero" },
-          h("span", { className: "welcome-kicker" }, "BÀI 01 · TƯ DUY 4D × KHUÔN NGHĨ TRƯỚC S – C – Q"),
+          h("span", { className: "welcome-kicker" }, "BÀI 01 · TƯ DUY 4D × S (HOÀN CẢNH) · C (CÁI KHÓ) · Q (CÂU HỎI)"),
           h("h1", { className: "welcome-title" }, "Tóm tắt tài liệu dài cùng Gemini"),
           h(
             "p",
             { className: "welcome-sub" },
-            "Hỏi “Tóm tắt” chỉ biết tài liệu viết gì — kể hoàn cảnh bằng ",
-            h("span", { className: "marker-sweep" }, "S – C – Q + Trang – Sót – Bàn"),
+            "Hỏi “Tóm tắt” chỉ biết tài liệu viết gì — nghĩ trước bằng ",
+            h("span", { className: "marker-sweep" }, "S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"),
             " mới biết bạn mất gì, dùng được gì!"
           )
         ),
@@ -532,16 +561,17 @@
 
     const refBox = h(
       "section",
-      { className: "surface-card", style: "margin-bottom:0", "aria-label": "Tóm tắt Khung 4D" },
+      { className: "surface-card", style: "margin-bottom:0", "aria-label": "Tóm tắt Khung 4D × SCQ" },
       h(
         "div",
         { className: "mantra-strip" },
         h("p", { className: "mantra-row warn" }, "✕ Mình không nghĩ — AI làm thay — Ra rác bóng bẩy!"),
-        h("p", { className: "mantra-row good" }, "✓ Mình nghĩ trước (S–C–Q) — AI làm cùng (Trang–Sót–Bàn) — Mình kiểm cuối!")
+        h("p", { className: "mantra-row good" }, "✓ Mình nghĩ trước (S·C·Q) — AI làm cùng (Trang·Sót·Bàn) — Mình kiểm cuối (Chốt A)!")
       ),
+      renderScqLegend(),
       h(
         "div",
-        { className: "d4-cards" },
+        { className: "d4-cards", style: "margin-top:0.85rem" },
         ...DATA.fourDSummary.map(d =>
           h(
             "div",
@@ -570,7 +600,7 @@
       transBtn.classList.toggle("active", openTrans);
       refBtn.classList.toggle("active", openRef);
       transBtn.textContent = openTrans ? "Thu gọn bản ghi lời ↑" : `Đọc bản ghi lời (${fd.duration}) ↓`;
-      refBtn.textContent = openRef ? "Thu gọn Tóm tắt 4D ↑" : "Bảng tóm tắt 4D × SCQ ↓";
+      refBtn.textContent = openRef ? "Thu gọn Tóm tắt 4D × SCQ ↑" : "Bảng tóm tắt 4D × SCQ ↓";
       stageRoot?.classList.toggle("drawer-expanded", activeDrawer !== null);
     }
 
@@ -633,7 +663,7 @@
     });
   }
 
-  // ==================== ACTIVITY KIND: SORT (4D ROLES) ====================
+  // ==================== ACTIVITY KIND: SORT (4D × SCQ ROLES) ====================
   function renderActivitySort(container, scenarioId, tProg, act, stepNum) {
     if (!tProg.acts[act.id]) tProg.acts[act.id] = { assigned: {}, checked: false };
     const aState = tProg.acts[act.id];
@@ -698,7 +728,7 @@
             { className: `explain-box ${correctCount === cards.length ? "ok" : ""}`, role: "status" },
             h("strong", null, `Kết quả: Đúng ${correctCount}/${cards.length} hành động. `),
             correctCount === cards.length
-              ? "Xuất sắc! Bạn đã nắm chắc ranh giới giữa Mình nghĩ trước (S–C–Q), AI làm cùng (Trang–Sót–Bàn) và Mình kiểm cuối."
+              ? "Xuất sắc! Bạn đã gắn chặt Quy luật 4D với bộ khung S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) · A (Tự chốt)."
               : "Xem giải thích dưới từng thẻ hoặc bấm Chọn lại để xếp chuẩn cả 6 hành động."
           ),
           h(
@@ -768,13 +798,14 @@
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
+      act.showScqLegend && renderScqLegend(),
       cardHost
     );
 
     drawSort();
   }
 
-  // ==================== ACTIVITY KIND: QUIZ (S - C - Q DIAGNOSTICS) ====================
+  // ==================== ACTIVITY KIND: QUIZ (S - C - Q DISCRIMINATION & DIAGNOSTICS) ====================
   function renderActivityQuiz(container, scenarioId, tProg, act, stepNum) {
     if (!tProg.acts[act.id]) tProg.acts[act.id] = { qIdx: 0, picked: [] };
     const aState = tProg.acts[act.id];
@@ -856,7 +887,7 @@
           h(
             "div",
             { className: `explain-box ${isOk ? "ok" : ""}`, role: "status" },
-            h("strong", null, isOk ? "✓ Chính xác! " : "✕ Điểm mấu chốt trong S – C – Q: "),
+            h("strong", null, isOk ? "✓ Chính xác! " : "✕ Điểm mấu chốt của S – C – Q: "),
             qObj.explain
           ),
           h(
@@ -888,7 +919,7 @@
                   drawQuiz();
                 }
               },
-              "Làm lại 4 câu"
+              `Làm lại ${qs.length} câu`
             )
           )
         );
@@ -912,7 +943,7 @@
           picked === null
             ? `Chọn 1 đáp án cho câu ${idx + 1}/${qs.length}`
             : allAnswered
-            ? `Đã hoàn thành ${score}/${qs.length} câu chẩn đoán S – C – Q`
+            ? `Đã hoàn thành ${score}/${qs.length} câu S – C – Q`
             : `Đã trả lời câu ${idx + 1}/${qs.length}`,
         nextLabel:
           picked !== null && !isLastQ
@@ -944,17 +975,23 @@
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
+      act.showScqLegend && renderScqLegend(),
       cardHost
     );
 
     drawQuiz();
   }
 
-  // ==================== ACTIVITY KIND: FILL (SCQ + TRANG - SÓT - BÀN) ====================
+  // ==================== ACTIVITY KIND: FILL (FADED SCAFFOLDING SCQ BUILDER) ====================
   function renderActivityFill(container, scenarioId, tProg, act, stepNum) {
-    if (!tProg.acts[act.id] || !Array.isArray(tProg.acts[act.id].values) || tProg.acts[act.id].values.length !== act.fields.length) {
-      tProg.acts[act.id] = { values: act.fields.map(() => "") };
+    if (
+      !tProg.acts[act.id] ||
+      !Array.isArray(tProg.acts[act.id].values) ||
+      tProg.acts[act.id].values.length !== act.fields.length
+    ) {
+      tProg.acts[act.id] = { values: act.fields.map(() => ""), revealed: {} };
     }
+    if (!tProg.acts[act.id].revealed) tProg.acts[act.id].revealed = {};
     const aState = tProg.acts[act.id];
     const isStudent = scenarioId === "student";
     const fields = act.fields;
@@ -973,6 +1010,7 @@
     }
 
     const synBody = h("div", { className: "synthesis-body", style: "white-space:pre-line" });
+    const cTestBanner = h("div", { className: "c-test-banner", hidden: true }, act.cTestNote || "");
     const selfCheckBanner = h("div", { className: "explain-box ok", hidden: !tProg.doneSteps[stepNum] }, act.revealNote);
 
     const copyBtn = h(
@@ -1000,20 +1038,23 @@
     );
 
     function syncStatementAndDock() {
-      const slotNode = (i, fallback) => {
+      const slotNode = (i, fallback, colorCls) => {
         const val = (aState.values[i] || "").trim();
-        return h("span", { className: `syn-slot ${val ? "" : "empty"}` }, val || fallback);
+        return h("span", { className: `syn-slot ${colorCls} ${val ? "filled" : "empty"}` }, val || fallback);
       };
 
       synBody.replaceChildren(
         "Mình đang ",
-        slotNode(0, "[S - đang làm gì]"),
+        slotNode(0, "[S · Hoàn cảnh]", "slot-blue"),
         ", nhưng ",
-        slotNode(1, "[C - ràng buộc khó]"),
+        slotNode(1, "[C · Cái khó]", "slot-amber"),
         ". Mình cần biết: ",
-        slotNode(2, "[Q - câu hỏi cần chốt]"),
+        slotNode(2, "[Q · Câu hỏi]", "slot-mint"),
         `? ${PROMPT_TAIL}`
       );
+
+      const hasC = (aState.values[1] || "").trim().length > 0;
+      cTestBanner.hidden = !hasC;
 
       const ready = isComplete();
       copyBtn.disabled = !ready;
@@ -1028,8 +1069,8 @@
         prevLabel: `← Trang ${stepNum - 1}: ${STEPS_META[stepNum - 2].short}`,
         onPrev: () => goTo(scenarioId, stepNum - 1),
         statusText: ready
-          ? "Câu lệnh SCQ + Trang – Sót – Bàn đã sẵn sàng!"
-          : "Điền đủ 3 mảnh (S) – (C) – (Q) bên trên",
+          ? "Câu lệnh S – C – Q + Trang – Sót – Bàn đã sẵn sàng!"
+          : "Tự nhớ nghĩa S – C – Q và điền đủ 3 ô bên trên",
         nextLabel: `Tiếp tục sang ${STEPS_META[stepNum].short} →`,
         onNext: () => goTo(scenarioId, stepNum + 1),
         nextSuccess: ready
@@ -1037,15 +1078,20 @@
     }
 
     const textareas = [];
+    const revealUpdaters = [];
+
     const fieldNodes = fields.map((f, idx) => {
       const hint = isStudent ? f.hintStudent : f.hintAdult;
       const sample = isStudent ? f.sampleStudent : f.sampleAdult;
       const id = `causal-slot-${f.slot}`;
+      const labelMeaning = h("span", { className: "faded-meaning" });
+      const hintLine = h("p", { className: "causal-hint" });
+      const revealBtn = h("button", { type: "button", className: "icon-tool-btn recall-pill-btn" });
+
       const ta = h("textarea", {
         id,
         rows: 2,
         className: "clean-textarea",
-        placeholder: `Điền (${f.slot}) — ví dụ: “${sample}”`,
         value: aState.values[idx] || "",
         onInput: e => {
           aState.values[idx] = e.target.value;
@@ -1055,11 +1101,47 @@
       });
       textareas.push(ta);
 
+      function syncFieldReveal() {
+        const isRev = !!aState.revealed[f.slot];
+        if (isRev) {
+          labelMeaning.textContent = `${f.en} · ${f.vi.toUpperCase()} (${f.signal})`;
+          labelMeaning.classList.add("revealed");
+          hintLine.textContent = hint;
+          ta.placeholder = `Điền (${f.slot} · ${f.vi}) — ví dụ: “${sample}”`;
+          revealBtn.textContent = "Ẩn nhắc nghĩa";
+        } else {
+          labelMeaning.textContent = f.recallPrompt || "Nhẩm thử nghĩa chữ này trước khi bấm nhắc!";
+          labelMeaning.classList.remove("revealed");
+          hintLine.textContent = `Mở đầu bằng từ khóa của chữ ${f.slot} (bấm 💡 để xem ví dụ gợi ý)`;
+          ta.placeholder = `Tự điền mảnh (${f.slot}) của bạn vào đây...`;
+          revealBtn.textContent = `💡 Nhắc nghĩa chữ ${f.slot}`;
+        }
+      }
+
+      revealBtn.onclick = () => {
+        aState.revealed[f.slot] = !aState.revealed[f.slot];
+        saveState();
+        syncFieldReveal();
+      };
+
+      syncFieldReveal();
+      revealUpdaters.push(syncFieldReveal);
+
       return h(
         "div",
-        { className: "causal-field" },
-        h("label", { for: id, className: "causal-label" }, h("span", { className: "slot-tag" }, `(${f.slot})`), f.label),
-        h("p", { className: "causal-hint" }, hint),
+        { className: `causal-field field-${f.color}` },
+        h(
+          "div",
+          { className: "causal-head-row" },
+          h(
+            "label",
+            { for: id, className: "causal-label" },
+            h("span", { className: `scq-letter-chip chip-${f.color}` }, f.slot),
+            labelMeaning
+          ),
+          revealBtn
+        ),
+        hintLine,
         ta
       );
     });
@@ -1067,7 +1149,7 @@
     const toolbar = h(
       "div",
       { className: "helper-toolbar" },
-      h("span", null, `Đang mở theo: ${isStudent ? "Hành trình Học sinh" : "Hành trình Người lớn"}`),
+      h("span", null, `Đang thực hành: ${isStudent ? "Hành trình Học sinh" : "Hành trình Người lớn"}`),
       h(
         "div",
         { style: "display:flex;gap:0.45rem;flex-wrap:wrap" },
@@ -1080,11 +1162,13 @@
               fields.forEach((f, idx) => {
                 const sample = isStudent ? f.sampleStudent : f.sampleAdult;
                 aState.values[idx] = sample;
+                aState.revealed[f.slot] = true;
                 textareas[idx].value = sample;
               });
+              revealUpdaters.forEach(fn => fn());
               saveState();
               syncStatementAndDock();
-              showToast("Đã điền gợi ý tình huống mới! Bạn có thể chỉnh lại theo ý mình.");
+              showToast("Đã mở nghĩa S – C – Q và điền thử tình huống mới!");
             }
           },
           "Điền thử tình huống mới"
@@ -1098,11 +1182,13 @@
               fields.forEach((f, idx) => {
                 const vSample = isStudent ? f.videoStudent || f.sampleStudent : f.videoAdult || f.sampleAdult;
                 aState.values[idx] = vSample;
+                aState.revealed[f.slot] = true;
                 textareas[idx].value = vSample;
               });
+              revealUpdaters.forEach(fn => fn());
               saveState();
               syncStatementAndDock();
-              showToast("Đã điền nguyên văn câu lệnh mẫu trong video thực chiến!");
+              showToast("Đã điền nguyên văn câu lệnh S – C – Q trong video thực chiến!");
             }
           },
           "Xem câu mẫu trong video"
@@ -1113,15 +1199,17 @@
             type: "button",
             className: "icon-tool-btn",
             onClick: () => {
-              fields.forEach((_, idx) => {
+              fields.forEach((f, idx) => {
                 aState.values[idx] = "";
+                aState.revealed[f.slot] = false;
                 textareas[idx].value = "";
               });
+              revealUpdaters.forEach(fn => fn());
               saveState();
               syncStatementAndDock();
             }
           },
-          "Xóa trống"
+          "Ẩn gợi ý & Xóa trống"
         )
       )
     );
@@ -1132,10 +1220,11 @@
       transferBrief && h("div", { className: "scenario-brief-box" }, transferBrief),
       toolbar,
       h("div", { className: "causal-grid" }, ...fieldNodes),
+      cTestBanner,
       h(
         "div",
         { className: "live-synthesis-card" },
-        h("p", { className: "synthesis-kicker" }, "Câu lệnh bỏ túi hoàn chỉnh: SCQ + Trang – Sót – Bàn"),
+        h("p", { className: "synthesis-kicker" }, "Câu lệnh bỏ túi hoàn chỉnh: S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) + Trang – Sót – Bàn"),
         synBody,
         h("div", { style: "display:flex;gap:0.65rem;flex-wrap:wrap" }, copyBtn, samplePdfLink)
       ),
@@ -1157,13 +1246,16 @@
     syncStatementAndDock();
   }
 
-  // ==================== ACTIVITY KIND: WRITE (VERIFY SOURCE PAGE & OWN FINAL DECISION) ====================
+  // ==================== ACTIVITY KIND: WRITE (VERIFY SOURCE PAGE & UNLOCK "A - ANSWER") ====================
   function renderActivityWrite(container, scenarioId, tProg, act, stepNum) {
     if (!tProg.acts[act.id]) tProg.acts[act.id] = { values: ["", ""], checks: {} };
     const aState = tProg.acts[act.id];
     const isStudent = scenarioId === "student";
     const vCase = isStudent ? act.verifyCaseStudent : act.verifyCaseAdult;
     const matchedCaseFile = DATA.caseFiles.find(cf => cf.forScenario === scenarioId) || DATA.caseFiles[0];
+
+    const spineHost = h("div");
+    const unlockBanner = h("div", { className: "explain-box ok", hidden: true }, act.unlockAnswerNote || "");
 
     function checkReady() {
       const hasAllText = act.fields.every((_, i) => (aState.values[i] || "").trim().length > 0);
@@ -1172,7 +1264,11 @@
     }
 
     function updateStatus() {
+      const hasAnswerText = (aState.values[1] || "").trim().length > 0;
+      unlockBanner.hidden = !hasAnswerText;
       const rdy = checkReady();
+      spineHost.replaceChildren(renderSpineStrip(hasAnswerText || rdy ? [0, 1, 2] : act.spineActive));
+
       if (rdy && !tProg.doneSteps[stepNum]) {
         tProg.doneSteps[stepNum] = true;
         saveState();
@@ -1181,7 +1277,9 @@
       configureDock({
         prevLabel: `← Trang ${stepNum - 1}: ${STEPS_META[stepNum - 2].short}`,
         onPrev: () => goTo(scenarioId, stepNum - 1),
-        statusText: rdy ? "Đã hoàn tất bước Kiểm cuối & Tự chốt!" : "Điền 2 ô thẩm định & tick cam kết để hoàn tất",
+        statusText: rdy
+          ? "Đã mở khóa trọn bộ S – C – Q – A & Quy luật 4D!"
+          : "Điền kết quả kiểm trang gốc, tự chốt chữ A & tick cam kết",
         nextLabel: "Hoàn thành & Xem Tổng kết →",
         onNext: () => {
           if (rdy) tProg.doneSteps[7] = true;
@@ -1234,7 +1332,7 @@
                   });
                   saveState();
                   updateStatus();
-                  showToast("Đã điền mẫu thẩm định trang gốc & quyết định chốt! Bạn có thể sửa lại theo lời của mình.");
+                  showToast("Đã điền mẫu thẩm định trang gốc & mở khóa chữ A (Answer)!");
                 }
               },
               "Xem mẫu đối chiếu chuẩn"
@@ -1272,7 +1370,7 @@
     const checklistEl = h(
       "fieldset",
       { className: "rubric-box" },
-      h("legend", { style: "font-weight:700;font-size:0.9rem;padding:0 0.35rem" }, "Bảng tự kiểm 4D × SCQ trước khi chốt"),
+      h("legend", { style: "font-weight:700;font-size:0.9rem;padding:0 0.35rem" }, "Bảng tự kiểm 4D × S – C – Q – A trước khi chốt"),
       ...act.checklist.map((item, i) => {
         const inp = h("input", {
           type: "checkbox",
@@ -1289,7 +1387,7 @@
     );
 
     container.append(
-      renderSpineStrip(act.spineActive),
+      spineHost,
       h(
         "header",
         { className: "step-header" },
@@ -1297,15 +1395,23 @@
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
-      h("div", { className: "surface-card" }, verifyCard, h("div", { className: "causal-grid" }, ...fieldNodes), checklistEl)
+      h(
+        "div",
+        { className: "surface-card" },
+        verifyCard,
+        h("div", { className: "causal-grid" }, ...fieldNodes),
+        unlockBanner,
+        checklistEl
+      )
     );
 
     updateStatus();
   }
 
-  // ==================== STEP 7: SUMMARY & TRAP PDF CASE FILES ====================
+  // ==================== STEP 7: SUMMARY + 3-SLOT ACTIVE RECALL + PDF CASE FILES ====================
   function renderStep7Summary(container, scenarioId, tProg) {
     tProg.doneSteps[7] = true;
+    if (!Array.isArray(tProg.recallVals)) tProg.recallVals = ["", "", ""];
     saveState();
     updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
 
@@ -1318,15 +1424,123 @@
     const fillVals = tProg.acts["act-fill"]?.values || [];
     const hasFill = fillVals.some(v => (v || "").trim().length > 0);
 
+    // Non-blocking 3-Slot Active Recall Card (Zero hints first!)
+    const recallHost = h("section", { className: "surface-card" });
+    const normVi = s =>
+      (s || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .trim();
+
+    function drawRecallCard() {
+      const rVals = tProg.recallVals;
+      const okS = /hoan canh|tinh huong|situation/.test(normVi(rVals[0]));
+      const okC = /cai kho|kho khan|complication/.test(normVi(rVals[1]));
+      const okQ = /cau hoi|question/.test(normVi(rVals[2]));
+      const allOk = okS && okC && okQ;
+
+      const inputs = [
+        { code: "S", color: "blue", ok: okS, ph: "Gõ nghĩa tiếng Việt của S..." },
+        { code: "C", color: "amber", ok: okC, ph: "Gõ nghĩa tiếng Việt của C..." },
+        { code: "Q", color: "mint", ok: okQ, ph: "Gõ nghĩa tiếng Việt của Q..." }
+      ].map((item, idx) =>
+        h(
+          "div",
+          { className: `recall-slot-box ${tProg.recallChecked ? (item.ok ? "ok" : "show-ans") : ""}` },
+          h(
+            "label",
+            { className: "recall-slot-lbl" },
+            h("span", { className: `scq-letter-chip chip-${item.color}` }, item.code),
+            h("span", null, `Chữ ${item.code} nghĩa là gì?`)
+          ),
+          h("input", {
+            type: "text",
+            className: "clean-input",
+            placeholder: item.ph,
+            value: rVals[idx] || "",
+            onInput: e => {
+              tProg.recallVals[idx] = e.target.value;
+              saveState();
+            }
+          })
+        )
+      );
+
+      const extraNodes = tProg.recallChecked
+        ? [
+            h(
+              "div",
+              { className: `explain-box ${allOk ? "ok" : ""}`, style: "margin-top:0.9rem" },
+              h(
+                "strong",
+                null,
+                allOk
+                  ? "✓ Thuộc nằm lòng 3/3 chữ! "
+                  : "💡 Đối chiếu nhanh để nhớ in vào đầu: "
+              ),
+              "S = Situation · Hoàn cảnh (“Mình đang…”)  |  C = Complication · Cái khó (“…nhưng…”)  |  Q = Question · Câu hỏi (“Mình cần biết…?”)."
+            ),
+            h("div", { style: "margin-top:0.85rem" }, renderScqLegend())
+          ]
+        : [];
+
+      recallHost.replaceChildren(
+        h("h2", { className: "transcript-title", style: "font-size:1.05rem" }, "🧠 Thử thách trí nhớ 10 giây (Không nhìn gợi ý): S – C – Q là gì?"),
+        h(
+          "p",
+          { className: "causal-hint", style: "margin-top:0.25rem;margin-bottom:0.85rem" },
+          "Tự gõ lại nghĩa tiếng Việt ngắn gọn của 3 chữ S – C – Q để khóa chặt công thức vào trí nhớ dài hạn:"
+        ),
+        h("div", { className: "recall-grid-3" }, ...inputs),
+        h(
+          "div",
+          { style: "margin-top:0.85rem;display:flex;gap:0.55rem;flex-wrap:wrap" },
+          h(
+            "button",
+            {
+              type: "button",
+              className: "btn-tactile",
+              onClick: () => {
+                tProg.recallChecked = true;
+                saveState();
+                drawRecallCard();
+              }
+            },
+            "Kiểm tra trí nhớ S – C – Q"
+          ),
+          tProg.recallChecked &&
+            h(
+              "button",
+              {
+                type: "button",
+                className: "btn-secondary",
+                onClick: () => {
+                  tProg.recallChecked = false;
+                  tProg.recallVals = ["", "", ""];
+                  saveState();
+                  drawRecallCard();
+                }
+              },
+              "Nhẩm lại lần nữa"
+            )
+        ),
+        ...extraNodes
+      );
+    }
+
+    drawRecallCard();
+
     const summaryCard = h(
       "section",
       { className: "summary-hero-card" },
       h("span", { className: "completion-badge" }, `✓ ĐÃ HOÀN TẤT ${doneEx.length}/4 BÀI TẬP 4D × SCQ`),
-      h("h1", { className: "step-title", tabindex: "-1" }, "Tổng kết Chinh phục Bài 01 · Tư duy 4D × Khuôn S – C – Q"),
+      h("h1", { className: "step-title", tabindex: "-1" }, "Tổng kết Bài 01 · Quy luật 4D × S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"),
       h(
         "p",
         { className: "step-lead" },
-        "Bạn đã nắm trọn hai trụ cột cốt lõi: Mình nghĩ trước bằng S – C – Q, để AI làm cùng qua Trang – Sót – Bàn, rồi Mình kiểm trang gốc và tự chốt cuối."
+        "Mình nghĩ trước bằng S – C – Q, giao AI làm cùng qua Trang – Sót – Bàn, rồi Mình mở trang gốc kiểm cuối & tự chốt chữ A (Answer)!"
       ),
       renderSpineStrip([0, 1, 2]),
       missingEx.length > 0 &&
@@ -1352,13 +1566,13 @@
       h(
         "div",
         { className: "live-synthesis-card" },
-        h("p", { className: "synthesis-kicker" }, "Công thức bỏ túi mang theo ra đời thật: SCQ + Trang – Sót – Bàn"),
+        h("p", { className: "synthesis-kicker" }, "Công thức bỏ túi mang theo ra đời thật: S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) + Trang – Sót – Bàn"),
         h(
           "p",
           { className: "synthesis-body" },
           hasFill
-            ? `“Mình đang ${fillVals[0] || "[S]"}, nhưng ${fillVals[1] || "[C]"}. Mình cần biết: ${(fillVals[2] || "[Q]").replace(/\?+$/, "")}? ${PROMPT_TAIL}”`
-            : `“Mình đang [S], nhưng [C]. Mình cần biết: [Q]? ${PROMPT_TAIL}”`
+            ? `“Mình đang ${fillVals[0] || "[S · Hoàn cảnh]"}, nhưng ${fillVals[1] || "[C · Cái khó]"}. Mình cần biết: ${(fillVals[2] || "[Q · Câu hỏi]").replace(/\?+$/, "")}? ${PROMPT_TAIL}”`
+            : `“Mình đang [S · Hoàn cảnh], nhưng [C · Cái khó]. Mình cần biết: [Q · Câu hỏi]? ${PROMPT_TAIL}”`
         )
       )
     );
@@ -1401,7 +1615,7 @@
       )
     );
 
-    container.append(summaryCard, pdfSection);
+    container.append(summaryCard, recallHost, pdfSection);
 
     configureDock({
       prevLabel: "← Bài tập 4",
@@ -1492,7 +1706,7 @@
     });
 
     document.getElementById("export-btn")?.addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify({ version: 3, exportedAt: new Date().toISOString(), state }, null, 2)], {
+      const blob = new Blob([JSON.stringify({ version: 4, exportedAt: new Date().toISOString(), state }, null, 2)], {
         type: "application/json"
       });
       const url = URL.createObjectURL(blob);
