@@ -1954,3 +1954,155 @@ button:disabled {
   color: var(--success);
   font-weight: 600;
 }
+
+
+/* ==================== EXERCISE 4: CLEAN SINGLE-TASK SOURCE AUDIT ==================== */
+.audit-case-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.05rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-case-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.audit-pdf-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.audit-pdf-link:hover {
+  color: var(--ink);
+}
+
+.audit-section-lbl {
+  margin: 0 0 0.65rem;
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-secondary);
+}
+
+.audit-claims-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.audit-claim-btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1.05rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: border-color 0.15s, background-color 0.15s, transform 0.1s;
+}
+
+.audit-claim-btn:hover:not(:disabled) {
+  border-color: var(--accent-border-strong);
+  background: var(--accent-soft);
+}
+
+.audit-claim-badge {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 700;
+  padding: 0.16rem 0.52rem;
+  border-radius: 6px;
+  background: var(--surface-subtle);
+  color: var(--ink-secondary);
+}
+
+.audit-claim-text {
+  font-size: 0.96rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.audit-claim-btn.verified-true {
+  opacity: 0.68;
+  background: var(--surface-subtle);
+  border-color: var(--border);
+  cursor: default;
+}
+
+.audit-claim-btn.verified-true .audit-claim-badge {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.audit-claim-btn.caught-error {
+  background: var(--warn-soft);
+  border: 2px solid var(--warn);
+  cursor: default;
+}
+
+.audit-claim-btn.caught-error .audit-claim-badge {
+  background: var(--warn);
+  color: #ffffff;
+}
+
+.audit-excerpts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+}
+
+@media (min-width: 820px) {
+  .audit-excerpts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.audit-excerpt-card {
+  padding: 0.85rem 0.95rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.audit-excerpt-card.highlight-source {
+  background: var(--success-soft);
+  border-color: var(--success);
+}
+
+.audit-excerpt-page {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-text);
+}
+
+.audit-excerpt-card.highlight-source .audit-excerpt-page {
+  color: var(--success);
+}
+
+.audit-excerpt-quote {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink-secondary);
+}

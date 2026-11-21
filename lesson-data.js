@@ -44,15 +44,15 @@
     spinePillars: [
       {
         step: "1. Mình nghĩ trước",
-        sub: "D1 · S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"
+        sub: "S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"
       },
       {
         step: "2. AI làm cùng",
-        sub: "D2 · Kèm Trang · Chỉ Sót · Cùng Bàn"
+        sub: "Kèm số trang · Chỉ chỗ dễ sót · Cùng bàn"
       },
       {
         step: "3. Mình kiểm cuối",
-        sub: "D3–D4 · Mở trang gốc & Tự chốt A (Answer)"
+        sub: "Mở trang gốc đối chiếu & Tự chốt"
       }
     ],
 
@@ -268,241 +268,241 @@
       },
       {
         code: "D4 · Diligence",
-        title: "Trách nhiệm (Mình tự chốt A — Answer)",
-        desc: "AI chỉ đưa bản nháp; chính mình mới là người hiểu rõ, tự chốt chữ A (Answer — Quyết định cuối) và chịu trách nhiệm."
+        title: "Trách nhiệm (Mình tự chốt quyết định cuối)",
+        desc: "AI chỉ đưa bản nháp; chính mình mới là người hiểu rõ, tự ra quyết định cuối và chịu trách nhiệm."
       }
     ],
 
     activities: [
-      // ==================== ACTIVITY 1 (STEP 3): 4D × SCQA ROLE SORT ====================
+      // ==================== ACTIVITY 1 (STEP 3): CLEAN 3-STEP 4D CLASSIFICATION ====================
       {
         id: "act-sort",
         kind: "sort",
         spineActive: [0, 1, 2],
-        showScqLegend: true,
-        phase: "Trụ cột 1 · Quy luật 4D × S – C – Q · 4 phút",
-        title: "Bài tập 1: Ai làm bước nào trong Quy luật 4D?",
-        lead: "Quy luật 4D gói gọn trong 3 nhịp: Mình nghĩ trước (S·C·Q) — AI làm cùng (Trang·Sót·Bàn) — Mình kiểm cuối (Chốt A). Hãy xếp mỗi hành động dưới đây vào đúng vai.",
+        showScqLegend: false,
+        phase: "Bài tập 1 · Khung 4D · 3 phút",
+        title: "Bài tập 1: Việc này thuộc bước nào trong 4D?",
+        lead: "Nhiệm vụ: Bấm chọn xem mỗi việc làm dưới đây thuộc bước nào trong 3 bước làm chủ AI.",
         columns: [
-          "1. Mình nghĩ trước (S·C·Q)",
-          "2. AI làm cùng (Trang·Sót·Bàn)",
-          "3. Mình kiểm cuối (Chốt A)",
-          "✕ Sai vai (Giao trắng cho AI)"
+          "1. Mình nghĩ trước",
+          "2. AI làm cùng",
+          "3. Mình kiểm cuối"
         ],
         cardsAdult: [
           {
-            label: "Trước khi mở Gemini, chị Hà tự xác định rõ 3 mảnh: S · Hoàn cảnh (xem hợp đồng 12 trang), C · Cái khó (nhưng vốn chỉ đủ 10 tháng), Q · Câu hỏi (nghỉ ở tháng 10 mất bao nhiêu tiền?).",
+            label: "Ghi ra giới hạn tài chính của mình: vốn dự phòng chỉ đủ cầm cự quán 10 tháng.",
             col: 0,
-            why: "Chuẩn D1 (Mình nghĩ trước): dùng bộ 3 S (Situation · Hoàn cảnh) – C (Complication · Cái khó) – Q (Question · Câu hỏi) làm mỏ neo."
+            why: "Chỉ chính bạn mới biết hoàn cảnh và giới hạn vốn của mình — nếu bỏ qua bước này là giao trắng cho AI."
           },
           {
-            label: "Anh Tuấn quăng tệp hợp đồng 12 trang vào AI nhắn: “Đọc hết rồi quyết định luôn giúp tôi xem chiều nay 3h có nên ký không nhé!”",
-            col: 3,
-            why: "Sai vai! Giao trắng quyền phán đoán và chịu trách nhiệm tài chính cho máy là rơi thẳng vào vòng lặp lệ thuộc AI."
+            label: "Chốt rõ câu hỏi trước khi mở máy: trả mặt bằng ở tháng thứ 10 thì mất tổng bao nhiêu tiền?",
+            col: 0,
+            why: "Xác định sẵn câu hỏi mấu chốt từ đầu giúp bạn làm chủ hướng phân tích thay vì đọc thụ động."
           },
           {
-            label: "Trong câu lệnh, chị Hà dặn Gemini: “Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.”",
+            label: "Gửi tệp hợp đồng 12 trang vào Gemini, dặn lọc các khoản phạt kèm số trang và chỉ chỗ dễ sót.",
             col: 1,
-            why: "Chuẩn D2 (AI làm cùng): giao AI dò 12 trang kèm số trang, soi điểm mù dễ sót và gợi mở hướng đàm phán."
+            why: "Phần dò tìm xuyên 12 trang và nối dữ liệu kèm số trang là việc giao cho AI làm cùng."
           },
           {
-            label: "Thấy bảng tóm tắt của AI trình bày đẹp mắt, anh Nam yên tâm mang hợp đồng đi ký cọc luôn mà không mở tệp PDF gốc ra xem lại.",
-            col: 3,
-            why: "Sai vai! Bị “rác bóng bẩy” đánh lừa, bỏ qua hoàn toàn bước thẩm định nguyên văn trên bản gốc."
-          },
-          {
-            label: "Khi AI báo tổng thiệt hại 197,5 triệu nằm ở Trang 3, Trang 4 và Phụ lục Trang 12, chị Hà mở tệp PDF gốc lật đúng các trang đó đọc kiểm lại từng con số.",
+            label: "Mở Phụ lục 02 ở Trang 12 xem mức phạt thiết bị có đúng 85 triệu như AI vừa báo không.",
             col: 2,
-            why: "Chuẩn D3 (Mình kiểm cuối): dùng số trang AI trích dẫn để tự mắt kiểm chứng trên tài liệu gốc."
+            why: "Dù AI trích số trang rất tự tin, bạn vẫn phải lật đúng trang gốc kiểm lại con số bằng mắt."
           },
           {
-            label: "Đối chiếu bản gốc xong, chị Hà tự chốt phương án (chữ A – Answer): nhắn chủ nhà xin đàm phán sửa điều khoản khấu hao thiết bị trước khi đặt bút ký.",
+            label: "Dò lại Khoản 2.1 ở Trang 2 trên tệp PDF gốc để đọc nguyên văn câu cấm tự ý sang nhượng.",
             col: 2,
-            why: "Chuẩn D4 (Mình kiểm cuối & Chốt A): AI chỉ nháp, còn câu trả lời chốt cuối cùng thuộc về bạn."
+            why: "Đối chiếu nguyên văn điều khoản trên bản gốc để chắc chắn AI không diễn giải sai câu chữ pháp lý."
+          },
+          {
+            label: "Sau khi kiểm đủ các trang gốc, tự quyết định nhắn chủ nhà xin đàm phán lại trước khi ký.",
+            col: 2,
+            why: "AI không đền tiền thay bạn — người ký tên và chốt quyết định cuối cùng luôn phải là bạn."
           }
         ],
         cardsStudent: [
           {
-            label: "Trước khi hỏi AI, nhóm 8A2 tự ghi rõ 3 mảnh: S · Hoàn cảnh (viết kịch 3 phút về Trần Quốc Toản), C · Cái khó (nhưng thầy bắt cảnh chính chỉ dùng chính sử), Q · Câu hỏi (chi tiết nào diễn chính, chi tiết nào tách riêng?).",
+            label: "Ghi rõ yêu cầu của thầy trước khi mở máy: cảnh chính chỉ dùng chính sử, văn học tách riêng.",
             col: 0,
-            why: "Chuẩn D1 (Mình nghĩ trước): dùng bộ 3 S (Situation · Hoàn cảnh) – C (Complication · Cái khó) – Q (Question · Câu hỏi) trước khi đụng vào AI."
+            why: "Tự nắm chắc luật chấm điểm của đề bài trước khi hỏi — nếu bỏ qua là giao trắng việc học cho AI."
           },
           {
-            label: "Vừa nhận tệp tư liệu thầy Hùng gửi trong nhóm lớp, bạn Huy không mở tệp mà nhắn AI: “Viết luôn kịch bản 3 phút thật xúc động để thứ Hai nhóm mình diễn nhé!”",
-            col: 3,
-            why: "Sai vai! Giao trắng việc làm bài cho AI, bỏ qua cái khó của đề bài nên rất dễ trộn tiểu thuyết vào chính sử."
+            label: "Chốt rõ điều cần lọc: chi tiết nào đưa vào cảnh diễn 3 phút, chi tiết nào để ở lời bình?",
+            col: 0,
+            why: "Đặt sẵn câu hỏi phân loại rõ ràng từ đầu để AI phục vụ đúng cấu trúc bài của mình."
           },
           {
-            label: "Nhóm dặn Gemini: “Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.”",
+            label: "Gửi tệp tư liệu 12 trang cho Gemini, dặn kẻ bảng kèm số trang và chỉ điểm dễ sót.",
             col: 1,
-            why: "Chuẩn D2 (AI làm cùng): giao AI kẻ bảng kèm số trang, soi điểm mù (Trần Kiện, tuổi 1282–1285) và gợi mở bố cục kịch."
+            why: "Nhờ AI rà soát nhanh 12 trang tư liệu, kẻ bảng đối chiếu kèm số trang để tiết kiệm thời gian."
           },
           {
-            label: "Thấy AI viết sẵn lời thoại vua Trần Nhân Tông ban quả cam nghe rất hay, nhóm chép nguyên xi mang lên lớp diễn mà không dò lại tập tư liệu.",
-            col: 3,
-            why: "Sai vai! Rơi vào bẫy “vui giả”: lời văn mượt mà nhưng sai tiêu chí chấm điểm ở Trang 11."
-          },
-          {
-            label: "Nhìn số trang Gemini trích dẫn, cả nhóm mở tệp PDF của thầy lật đúng Trang 3, Trang 4, Trang 8 và Trang 11 đọc đối chiếu lại từng dòng.",
+            label: "Lật Trang 4 tập tư liệu xem Đại Việt sử ký toàn thư có chép cảnh vua ban cam như AI viết không.",
             col: 2,
-            why: "Chuẩn D3 (Mình kiểm cuối): kiểm chứng tận mắt trên tư liệu gốc thay vì tin mù quáng."
+            why: "AI rất hay quen tay trộn tiểu thuyết vào lịch sử — phải mở đúng trang sử gốc kiểm lại từng chi tiết."
           },
           {
-            label: "Kiểm tra xong, cả nhóm tự chốt kịch bản (chữ A – Answer): 2 phút đầu diễn cảnh Bình Than theo chính sử, 1 phút cuối tách riêng lời bình văn học.",
+            label: "So lại Bảng đối chiếu ở Trang 8 xem mốc tuổi năm 1285 mà AI nêu có khớp tư liệu gốc không.",
             col: 2,
-            why: "Chuẩn D4 (Mình kiểm cuối & Chốt A): chính nhóm hiểu bài, tự chốt phương án và tự tin bảo vệ bài trước lớp."
+            why: "Kiểm tra chéo niên đại và độ tuổi trên trang gốc để tránh lỗi mâu thuẫn trước lớp."
+          },
+          {
+            label: "Kiểm chứng xong các trang gốc, tự chốt kịch bản: 2 phút diễn Bình Than, 1 phút lời bình.",
+            col: 2,
+            why: "AI chỉ gợi ý bản nháp; chính bạn hiểu bài, tự chốt kịch bản và tự tin trả lời thầy cô trên lớp."
           }
         ]
       },
 
-      // ==================== ACTIVITY 2 (STEP 4): S vs C DISCRIMINATION + MISSING PIECE QUIZ ====================
+      // ==================== ACTIVITY 2 (STEP 4): EQUAL-LENGTH S - C - Q DIAGNOSTIC QUIZ ====================
       {
         id: "act-quiz",
         kind: "quiz",
         spineActive: [0, 1],
-        showScqLegend: true,
-        phase: "Trụ cột 2 · Nhớ sâu S – C – Q không học vẹt · 5 phút",
-        title: "Bài tập 2: Phân biệt S – C – Q & Bắt bệnh câu lệnh khuyết mảnh",
-        lead: "Đừng học vẹt chữ viết tắt — hãy nắm 3 từ khóa báo hiệu (“Mình đang…” / “…nhưng…” / “Mình cần biết…?”) và phép thử chữ C: “Bỏ đoạn này đi, AI có trả lời khác hẳn không?”.",
+        showScqLegend: false,
+        hideScqInSpineBeforeQ1: true,
+        phase: "Bài tập 2 · Khuôn S – C – Q · 4 phút",
+        title: "Bài tập 2: Bắt bệnh câu lệnh S – C – Q",
+        lead: "Nhiệm vụ: Chọn 1 đáp án đúng nhất cho mỗi câu hỏi dưới đây (5 câu).",
         questionsAdult: [
           {
-            q: "Để nhớ công thức S – C – Q suốt đời mà không nhầm lẫn, bộ giải nghĩa và từ khóa báo hiệu nào dưới đây là CHÍNH XÁC nhất?",
+            q: "Ba chữ S – C – Q trong khuôn nghĩ trước của McKinsey lần lượt là viết tắt của bộ từ nào?",
             options: [
-              "S = Summary (Tóm tắt) · C = Copy (Sao chép) · Q = Quick (Nhanh gọn).",
-              "S = Situation · Hoàn cảnh (“Mình đang…”)  |  C = Complication · Cái khó (“…nhưng…”)  |  Q = Question · Câu hỏi (“Mình cần biết…?”).",
-              "S = Search (Tìm kiếm) · C = Check (Kiểm tra) · Q = Quote (Trích dẫn).",
-              "Ba chữ S – C – Q chỉ là ký hiệu ngẫu nhiên, không có nghĩa tiếng Anh hay tiếng Việt."
-            ],
-            answer: 1,
-            explain:
-              "Mẹo nhớ cực nhanh: S – Situation (Hoàn cảnh: “Mình đang…”), C – Complication (Cái khó: trùng âm đầu chữ C, luôn đi sau chữ “nhưng…”), Q – Question (Câu hỏi: “Mình cần biết…?”)."
-          },
-          {
-            q: "Trong câu lệnh: “Mình đang xem hợp đồng thuê mặt bằng mở quán 12 trang, [nhưng vốn mình chỉ trụ được 10 tháng nếu vắng khách]. Mình cần biết: nghỉ ở tháng thứ 10 thì mất bao nhiêu tiền?”, phần đặt trong ngoặc vuông [...] thuộc chữ nào?",
-            options: [
-              "Chữ S — Situation (Hoàn cảnh), vì nó giới thiệu tên tài liệu.",
-              "Chữ C — Complication (Cái khó), vì đi sau chữ “nhưng” và nếu bỏ đoạn “10 tháng vốn” này đi, AI sẽ không bao giờ biết để cộng chéo 3 khoản phạt nghỉ sớm!",
-              "Chữ Q — Question (Câu hỏi), vì nó có chứa con số 10.",
-              "Phần giao việc Trang – Sót – Bàn."
-            ],
-            answer: 1,
-            explain:
-              "Áp dụng đúng phép thử chữ C: Bỏ đoạn “nhưng vốn chỉ trụ được 10 tháng” đi là AI trả lời khác hẳn (chỉ liệt kê chung chung thay vì tính thiệt hại mốc tháng 10) → Đó chính là C · Complication (Cái khó)!"
-          },
-          {
-            q: "Chị Lan gõ: “Mình đang xem hợp đồng thuê mặt bằng 12 trang. Mình cần biết: có điều khoản phạt nào đáng lưu ý không?”. Câu lệnh này đang THIẾU mảnh nào trong S – C – Q?",
-            options: [
-              "Thiếu S — Situation (Hoàn cảnh).",
-              "Thiếu C — Complication (Cái khó riêng sau chữ “nhưng…”, ví dụ: vốn chỉ đủ 10 tháng hoặc cần được sang nhượng quán), khiến AI chỉ liệt kê bề mặt.",
-              "Thiếu Q — Question (Câu hỏi).",
-              "Không thiếu mảnh nào cả."
-            ],
-            answer: 1,
-            explain:
-              "Có S (“Mình đang xem hợp đồng…”) và có Q (“Mình cần biết…”), nhưng khuyết hẳn C — Complication (Cái khó riêng của chị Lan) nên AI không biết xoáy sâu vào rủi ro nào."
-          },
-          {
-            q: "Anh Hoàng nhắn AI: “Mình đang đọc quy chế thưởng Tết 10 trang của công ty, nhưng đầu tháng 3 tới mình định xin nghỉ chuyển việc. Xem giúp mình nhé!”. Câu lệnh đã có S và C, nhưng thiếu mảnh nào?",
-            options: [
-              "Thiếu S — Situation (Hoàn cảnh).",
-              "Thiếu C — Complication (Cái khó).",
-              "Thiếu Q — Question (Câu hỏi cần chốt: “Mình cần biết nghỉ đầu tháng 3 có bị thu hồi thưởng Tết hay đền phí đào tạo không?”), làm AI dễ nhận xét lan man.",
-              "Thiếu tên công ty."
+              "S: Tóm tắt (Summary) · C: Sao chép (Copy) · Q: Hỏi nhanh (Quick)",
+              "S: Tìm kiếm (Search) · C: Kiểm tra (Check) · Q: Trích dẫn (Quote)",
+              "S: Hoàn cảnh (Situation) · C: Cái khó (Complication) · Q: Câu hỏi (Question)",
+              "S: Bối cảnh (Setting) · C: Nội dung (Content) · Q: Kết quả (Quality)"
             ],
             answer: 2,
             explain:
-              "S (Hoàn cảnh) và C (Cái khó) dựng bối cảnh, còn Q — Question (Câu hỏi) khóa chặt đầu ra để AI giải quyết đúng quyết định bạn đang cân nhắc."
+              "Mẹo nhớ nhanh: S — Situation (Hoàn cảnh: “Mình đang…”), C — Complication (Cái khó: trùng âm đầu chữ C, đi sau từ “nhưng…”), Q — Question (Câu hỏi: “Mình cần biết…?”)."
           },
           {
-            q: "Sau khi ghép đủ S – C – Q, vì sao phần đuôi luôn dặn AI đủ 3 chữ “Trang – Sót – Bàn” (“trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé”)?",
+            q: "Trong câu lệnh: “Mình đang xem hợp đồng thuê quán 12 trang, [nhưng vốn mình chỉ trụ được 10 tháng]. Mình cần biết: nghỉ ở tháng 10 mất bao nhiêu tiền?”, phần trong ngoặc [...] thuộc chữ nào?",
             options: [
-              "Chỉ để câu lệnh dài hơn cho đẹp mắt.",
-              "“Kèm số TRANG” để mở bản gốc kiểm cuối (D3); “chỉ chỗ dễ SÓT” để soi điểm mù ngoài câu hỏi (như cấm sang nhượng ở Trang 2); “gợi ý & cùng BÀN” để AI làm cố vấn đối thoại (D2).",
-              "Để AI chịu trách nhiệm đền tiền thay người ký hợp đồng.",
-              "Để khỏi cần đọc lại bản PDF gốc."
+              "Chữ C (Cái khó) — giới hạn riêng đứng ngay sau từ “nhưng”",
+              "Chữ S (Hoàn cảnh) — thông tin giới thiệu tên tệp tài liệu",
+              "Chữ Q (Câu hỏi) — yêu cầu tính toán con số thiệt hại cuối",
+              "Phần giao việc — lời dặn AI trích dẫn đầy đủ kèm số trang"
+            ],
+            answer: 0,
+            explain:
+              "Phép thử chữ C: Nếu bỏ đoạn “nhưng vốn mình chỉ trụ được 10 tháng” đi, AI sẽ không bao giờ biết để cộng dồn 3 khoản phạt nghỉ sớm ở mốc tháng 10 — đó chính là C · Complication (Cái khó)!"
+          },
+          {
+            q: "Chị Lan gõ: “Mình đang xem hợp đồng thuê mặt bằng 12 trang. Mình cần biết: hợp đồng này có điều khoản phạt nào cần lưu ý không?”. Câu lệnh trên đang yếu ở đâu?",
+            options: [
+              "Thiếu S (Hoàn cảnh): chưa nói rõ mình đang đọc loại tài liệu gì",
+              "Thiếu C (Cái khó): chưa nêu giới hạn vốn hay điều mình lo ngại",
+              "Thiếu Q (Câu hỏi): chưa có câu hỏi nào đặt ở cuối câu lệnh",
+              "Đã đủ cả S – C – Q: có thể bấm gửi ngay không cần bổ sung"
             ],
             answer: 1,
             explain:
-              "S – C – Q thực thi nhịp 1 (Mình nghĩ trước), còn Trang – Sót – Bàn thực thi nhịp 2 (AI làm cùng) và bắc cầu thẳng sang nhịp 3 (Mình kiểm cuối)!"
+              "Chị Lan đã nêu S (đang xem hợp đồng 12 trang) và Q (hỏi điều khoản phạt), nhưng khuyết hẳn C (Cái khó riêng, ví dụ: vốn chỉ đủ 10 tháng hoặc cần quyền sang nhượng) nên AI chỉ liệt kê chung chung."
+          },
+          {
+            q: "Anh Hoàng gõ: “Mình đang đọc quy chế thưởng Tết 10 trang của công ty, nhưng đầu tháng 3 tới mình định xin nghỉ việc. Xem giúp mình nhé!”. Câu lệnh này thiếu mảnh nào?",
+            options: [
+              "Thiếu S (Hoàn cảnh): chưa cho biết độ dài của quy chế đang đọc",
+              "Thiếu C (Cái khó): chưa cho biết thời điểm dự kiến xin nghỉ việc",
+              "Đã đủ cả S – C – Q: cụm “Xem giúp mình nhé” đã là câu hỏi rõ",
+              "Thiếu Q (Câu hỏi): chưa hỏi rõ khoản thu hồi hay phạt cần kiểm"
+            ],
+            answer: 3,
+            explain:
+              "Đã có S (đọc quy chế thưởng Tết) và C (nhưng đầu tháng 3 xin nghỉ), song cụm “Xem giúp mình nhé!” quá mơ hồ — cần chốt Q thật cụ thể: “Mình cần biết nghỉ đầu tháng 3 có bị thu hồi thưởng Tết hay đền phí đào tạo không?”."
+          },
+          {
+            q: "Sau khi viết đủ S – C – Q, vì sao ta luôn dặn thêm AI: “trả lời kèm số trang và chỉ thêm chỗ mình dễ sót”?",
+            options: [
+              "Để câu lệnh dài hơn giúp AI trình bày bảng biểu đẹp mắt hơn",
+              "Để giao trọn trách nhiệm kiểm tra hợp đồng cho AI làm thay mình",
+              "Để AI soi thêm điểm mù và có số trang mở bản gốc kiểm chứng",
+              "Để AI tự động lược bỏ bớt các phụ lục dài ở cuối hợp đồng"
+            ],
+            answer: 2,
+            explain:
+              "“Chỉ thêm chỗ dễ sót” giúp phát hiện điểm mù ngoài câu hỏi (như lệnh cấm sang nhượng ở Trang 2), còn “kèm số trang” giúp bạn lật đúng bản gốc kiểm chứng ở Bước 3!"
           }
         ],
         questionsStudent: [
           {
-            q: "Để nhớ công thức S – C – Q suốt đời mà không nhầm lẫn, bộ giải nghĩa và từ khóa báo hiệu nào dưới đây là CHÍNH XÁC nhất?",
+            q: "Ba chữ S – C – Q trong khuôn nghĩ trước của McKinsey lần lượt là viết tắt của bộ từ nào?",
             options: [
-              "S = Summary (Tóm tắt) · C = Copy (Chép bài) · Q = Quick (Làm nhanh).",
-              "S = Situation · Hoàn cảnh (“Mình đang…”)  |  C = Complication · Cái khó (“…nhưng…”)  |  Q = Question · Câu hỏi (“Mình cần biết…?”).",
-              "S = Story (Câu chuyện) · C = Character (Nhân vật) · Q = Quote (Câu nói).",
-              "Ba chữ S – C – Q chỉ đặt cho vui, không có ý nghĩa cụ thể."
-            ],
-            answer: 1,
-            explain:
-              "Mẹo nhớ cực nhanh: S – Situation (Hoàn cảnh: “Mình đang…”), C – Complication (Cái khó: trùng âm đầu chữ C, luôn bắt đầu bằng chữ “nhưng…”), Q – Question (Câu hỏi: “Mình cần biết…?”)."
-          },
-          {
-            q: "Trong câu lệnh của nhóm 8A2: “Mình đang viết kịch bản 3 phút về Trần Quốc Toản từ tư liệu thầy phát, [nhưng thầy bắt cảnh chính chỉ dùng chính sử còn chi tiết văn học phải tách riêng]. Mình cần biết: chi tiết nào đưa vào cảnh diễn, chi tiết nào tách riêng?”, đoạn trong ngoặc vuông [...] là chữ nào?",
-            options: [
-              "Chữ S — Situation (Hoàn cảnh), vì nhắc tới thầy giáo.",
-              "Chữ C — Complication (Cái khó), vì đi sau chữ “nhưng” và nếu bỏ đoạn này đi, AI sẽ trộn lẫn tiểu thuyết vào kịch bản ngay!",
-              "Chữ Q — Question (Câu hỏi), vì nói về cách chia cảnh.",
-              "Phần kiểm tra trang gốc."
-            ],
-            answer: 1,
-            explain:
-              "Áp dụng đúng phép thử chữ C: Bỏ đoạn “nhưng thầy bắt cảnh chính chỉ dùng chính sử…” đi là AI trả lời khác hẳn (viết kịch lồng cảnh vua ban cam vào ngay) → Đó chính là C · Complication (Cái khó)!"
-          },
-          {
-            q: "Bạn Mai gõ: “Mình đang viết kịch bản đóng vai 3 phút về Trần Quốc Toản từ tập tư liệu thầy phát. Mình cần biết: nên đưa những cảnh nào vào kịch bản cho hấp dẫn?”. Câu lệnh này đang THIẾU mảnh nào?",
-            options: [
-              "Thiếu S — Situation (Hoàn cảnh).",
-              "Thiếu C — Complication (Cái khó của đề bài sau chữ “nhưng…”: cảnh chính chỉ được dùng chính sử, văn học phải tách riêng) — khiến AI dễ gợi ý cảnh tiểu thuyết vào kịch chính!",
-              "Thiếu Q — Question (Câu hỏi).",
-              "Câu lệnh đã đủ cả S – C – Q."
-            ],
-            answer: 1,
-            explain:
-              "Thiếu C — Complication (Cái khó ở tiêu chí chấm Trang 11), AI sẽ ưu tiên kịch tính truyền miệng thay vì giữ nghiêm ranh giới sử liệu."
-          },
-          {
-            q: "Nhóm gõ: “Mình đang soạn kịch 3 phút từ tư liệu Trần Quốc Toản, nhưng thầy bắt cảnh chính chỉ dùng chính sử thôi. Giúp nhóm mình nhé!”. Đã có S và C, câu lệnh còn thiếu mảnh nào?",
-            options: [
-              "Thiếu S — Situation (Hoàn cảnh).",
-              "Thiếu C — Complication (Cái khó).",
-              "Thiếu Q — Question (Câu hỏi cụ thể: “Mình cần biết chi tiết nào đưa vào cảnh diễn chính, chi tiết nào phải tách sang lời bình?”) để AI kẻ ngay bảng phân loại 2 cột.",
-              "Thiếu lời cảm ơn cuối câu."
+              "S: Tóm tắt (Summary) · C: Sao chép (Copy) · Q: Làm nhanh (Quick)",
+              "S: Câu chuyện (Story) · C: Nhân vật (Character) · Q: Câu nói (Quote)",
+              "S: Hoàn cảnh (Situation) · C: Cái khó (Complication) · Q: Câu hỏi (Question)",
+              "S: Môn học (Subject) · C: Chương bài (Chapter) · Q: Đề thi (Quiz)"
             ],
             answer: 2,
             explain:
-              "S (Hoàn cảnh) và C (Cái khó) cho AI biết luật chơi, còn Q — Question (Câu hỏi) chỉ đạo thẳng đầu ra để nhóm có bảng lọc dùng ngay."
+              "Mẹo nhớ nhanh: S — Situation (Hoàn cảnh: “Mình đang…”), C — Complication (Cái khó: trùng âm đầu chữ C, đi sau từ “nhưng…”), Q — Question (Câu hỏi: “Mình cần biết…?”)."
           },
           {
-            q: "Nhờ ghép S – C – Q với phần đuôi “Trang – Sót – Bàn” (“trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé”), nhóm 8A2 đã được AI soi thêm điểm mù nào?",
+            q: "Trong câu lệnh: “Mình đang viết kịch 3 phút về Trần Quốc Toản từ tư liệu thầy phát, [nhưng thầy bắt cảnh chính chỉ dùng chính sử]. Mình cần biết: chi tiết nào diễn chính, chi tiết nào tách riêng?”, đoạn trong ngoặc [...] là chữ nào?",
             options: [
-              "AI tự đi diễn kịch trên lớp thay cả nhóm.",
-              "AI chỉ ra nhân vật đối trọng Hoài Nhân vương Trần Kiện (Trang 4, 10) và bẫy nhầm tuổi năm 1282 vs 1285, kèm rõ số trang để nhóm mở PDF gốc kiểm chứng!",
-              "AI xóa bớt 10 trang tư liệu cho ngắn.",
-              "Không thay đổi gì so với hỏi tóm tắt."
+              "Chữ C (Cái khó) — ràng buộc gắt gao đứng ngay sau từ “nhưng”",
+              "Chữ S (Hoàn cảnh) — thông tin giới thiệu tên tập tư liệu Sử",
+              "Chữ Q (Câu hỏi) — yêu cầu chia đôi hai cột cảnh diễn và lời bình",
+              "Phần kiểm cuối — bước mở lại từng trang tư liệu gốc để dò bài"
+            ],
+            answer: 0,
+            explain:
+              "Phép thử chữ C: Nếu bỏ đoạn “nhưng thầy bắt cảnh chính chỉ dùng chính sử” đi, AI sẽ lập tức trộn cảnh vua ban cam vào kịch bản chính — vậy đó chính là C · Complication (Cái khó)!"
+          },
+          {
+            q: "Bạn Mai gõ: “Mình đang viết kịch bản đóng vai 3 phút về Trần Quốc Toản từ tập tư liệu thầy phát. Mình cần biết: nên đưa những cảnh nào vào kịch bản cho hấp dẫn?”. Câu lệnh này đang yếu ở đâu?",
+            options: [
+              "Thiếu S (Hoàn cảnh): chưa nói rõ tên nhân vật lịch sử đang làm",
+              "Thiếu C (Cái khó): chưa nêu quy định tách riêng chính sử và văn học",
+              "Thiếu Q (Câu hỏi): chưa có câu hỏi nào đặt ở cuối câu lệnh",
+              "Đã đủ cả S – C – Q: có thể bấm gửi ngay không cần sửa thêm"
             ],
             answer: 1,
             explain:
-              "Đó là sức mạnh cộng hưởng của 4D × SCQ: Mình nghĩ trước (S–C–Q) → AI làm cùng soi điểm mù kèm trang (Trang–Sót–Bàn) → Mình kiểm trang gốc & tự chốt!"
+              "Bạn Mai đã có S (viết kịch 3 phút từ tư liệu) và Q (hỏi chọn cảnh nào), nhưng thiếu hẳn C (Cái khó: cảnh chính chỉ được dùng chính sử, văn học phải tách riêng) nên AI sẽ ưu tiên gợi ý cảnh tiểu thuyết."
+          },
+          {
+            q: "Bạn Nam gõ: “Mình đang soạn kịch 3 phút từ tư liệu Trần Quốc Toản, nhưng thầy bắt cảnh chính chỉ dùng chính sử thôi. Giúp mình nhé!”. Câu lệnh này thiếu mảnh nào?",
+            options: [
+              "Thiếu S (Hoàn cảnh): chưa nói thời lượng vở kịch dài bao nhiêu phút",
+              "Thiếu C (Cái khó): chưa nhắc tới quy định chỉ dùng chính sử của thầy",
+              "Đã đủ cả S – C – Q: cụm “Giúp mình nhé” đã thay thế cho câu hỏi",
+              "Thiếu Q (Câu hỏi): chưa hỏi rõ cần tách chi tiết nào khỏi cảnh chính"
+            ],
+            answer: 3,
+            explain:
+              "Đã có S và C nhưng “Giúp mình nhé!” chưa phải câu hỏi rõ — cần chốt Q cụ thể: “Mình cần biết chi tiết nào được đưa vào cảnh diễn chính, chi tiết nào phải tách sang lời bình?”."
+          },
+          {
+            q: "Sau khi viết đủ S – C – Q, vì sao ta luôn dặn thêm AI: “trả lời kèm số trang và chỉ thêm chỗ mình dễ sót”?",
+            options: [
+              "Để câu lệnh dài hơn giúp AI viết lời văn bay bổng cảm xúc hơn",
+              "Để AI tự chịu trách nhiệm nếu nhóm diễn sai sử liệu trước lớp",
+              "Để AI chỉ thêm điểm mù và có số trang mở tư liệu gốc kiểm lại",
+              "Để AI tự tóm lược bỏ đi các bảng đối chiếu ở cuối tập tư liệu"
+            ],
+            answer: 2,
+            explain:
+              "Nhờ câu dặn này, Gemini vừa chỉ thêm điểm mù cực đắt (Hoài Nhân vương Trần Kiện ở Trang 4, 10 & bẫy tuổi 1282–1285), vừa ghi rõ số trang để bạn mở PDF gốc kiểm lại!"
           }
         ]
       },
 
-      // ==================== ACTIVITY 3 (STEP 5): FADED SCAFFOLDING SCQ BUILDER ====================
+      // ==================== ACTIVITY 3 (STEP 5): SINGLE-TASK SCQ PROMPT BUILDER ====================
       {
         id: "act-fill",
         kind: "fill",
         spineActive: [0, 1],
         showScqLegend: false,
-        phase: "Thực hành Mình nghĩ trước (S–C–Q) + AI làm cùng · 5 phút",
-        title: "Bài tập 3: Tự nhớ & Ghép câu lệnh “S – C – Q + Trang – Sót – Bàn”",
-        lead: "Thử tự nhẩm trong đầu nghĩa của từng chữ S – C – Q trước khi bấm nút “💡 Nhắc nghĩa” trên mỗi ô, rồi điền vào tình huống mới bên dưới (hoặc tài liệu thật của bạn).",
+        phase: "Bài tập 3 · Thực hành Bước 1 & 2 · 4 phút",
+        title: "Bài tập 3: Tự ghép câu lệnh S – C – Q",
+        lead: "Nhiệm vụ: Điền 3 ô S – C – Q cho tình huống mới dưới đây để ghép thành câu lệnh hoàn chỉnh.",
         transferPromptAdult:
-          "🎯 Tình huống mới để tập nghĩ S – C – Q: Công ty vừa gửi Quy chế thưởng Tết & cam kết đào tạo dày 10 trang. Đầu tháng 3 tới (ngay sau khi nhận thưởng Tết) bạn định xin nghỉ chuyển việc, nên rất sợ vướng điều khoản thu hồi thưởng hoặc đền phí đào tạo.",
+          "Tình huống thực hành: Công ty vừa gửi Quy chế thưởng Tết & cam kết đào tạo dày 10 trang. Đầu tháng 3 tới (ngay sau Tết) bạn định xin nghỉ chuyển việc, nên rất lo bị thu hồi thưởng hoặc đền phí đào tạo.",
         transferPromptStudent:
-          "🎯 Tình huống mới để tập nghĩ S – C – Q: Cô Sinh học vừa phát tài liệu chuyên đề Di truyền dày 10 trang. Sáng mai kiểm tra 15 phút chỉ hỏi dạng bài sơ đồ phả hệ, mà tối nay bạn chỉ còn đúng 45 phút ôn bài.",
+          "Tình huống thực hành: Cô Sinh học vừa phát tài liệu chuyên đề Di truyền dày 10 trang. Sáng mai kiểm tra 15 phút chỉ hỏi dạng bài sơ đồ phả hệ, mà tối nay bạn chỉ còn đúng 45 phút ôn bài.",
         fields: [
           {
             slot: "S",
@@ -510,9 +510,8 @@
             vi: "Hoàn cảnh",
             signal: "Mình đang…",
             color: "blue",
-            recallPrompt: "Thử tự nhẩm: Chữ S viết tắt của từ gì, nghĩa tiếng Việt là gì? (Bấm 💡 nếu cần nhắc)",
-            hintAdult: "Ví dụ tình huống mới: đọc quy chế thưởng Tết và cam kết đào tạo 10 trang của công ty",
-            hintStudent: "Ví dụ tình huống mới: ôn tài liệu chuyên đề Di truyền 10 trang cô Sinh vừa phát",
+            hintAdult: "Gợi ý: đọc quy chế thưởng Tết và cam kết đào tạo 10 trang của công ty",
+            hintStudent: "Gợi ý: ôn tài liệu chuyên đề Di truyền 10 trang cô Sinh vừa phát",
             sampleAdult: "đọc quy chế thưởng Tết và cam kết đào tạo 10 trang của công ty",
             sampleStudent: "ôn tài liệu chuyên đề Di truyền 10 trang cô Sinh vừa phát",
             videoAdult: "xem hợp đồng thuê mặt bằng mở quán 12 trang",
@@ -524,9 +523,8 @@
             vi: "Cái khó",
             signal: "…nhưng…",
             color: "amber",
-            recallPrompt: "Thử tự nhẩm: Chữ C trùng âm đầu với từ tiếng Việt nào, đi sau từ nối nào?",
-            hintAdult: "Ví dụ tình huống mới: đầu tháng 3 tới mình định xin nghỉ việc ngay sau khi nhận thưởng Tết",
-            hintStudent: "Ví dụ tình huống mới: sáng mai kiểm tra 15 phút phần sơ đồ phả hệ mà tối nay mình chỉ còn 45 phút ôn",
+            hintAdult: "Gợi ý: đầu tháng 3 tới mình định xin nghỉ việc ngay sau khi nhận thưởng Tết",
+            hintStudent: "Gợi ý: sáng mai kiểm tra 15 phút phần sơ đồ phả hệ mà tối nay mình chỉ còn 45 phút ôn",
             sampleAdult: "đầu tháng 3 tới mình định xin nghỉ việc ngay sau khi nhận thưởng Tết",
             sampleStudent: "sáng mai kiểm tra 15 phút phần sơ đồ phả hệ mà tối nay mình chỉ còn 45 phút ôn",
             videoAdult: "vốn mình chỉ trụ được 10 tháng nếu vắng khách",
@@ -538,9 +536,8 @@
             vi: "Câu hỏi",
             signal: "Mình cần biết…?",
             color: "mint",
-            recallPrompt: "Thử tự nhẩm: Chữ Q khóa chặt điều gì ở cuối phần nghĩ trước?",
-            hintAdult: "Ví dụ tình huống mới: nghỉ vào đầu tháng 3 thì có bị thu hồi thưởng Tết hay đền chi phí đào tạo không",
-            hintStudent: "Ví dụ tình huống mới: trang nào nêu quy tắc giải nhanh phả hệ và lỗi nào dễ tính nhầm nhất",
+            hintAdult: "Gợi ý: nghỉ vào đầu tháng 3 thì có bị thu hồi thưởng Tết hay đền chi phí đào tạo không",
+            hintStudent: "Gợi ý: trang nào nêu quy tắc giải nhanh phả hệ và lỗi nào dễ tính nhầm nhất",
             sampleAdult: "nghỉ vào đầu tháng 3 thì có bị thu hồi thưởng Tết hay đền chi phí đào tạo không",
             sampleStudent: "trang nào nêu quy tắc giải nhanh phả hệ và lỗi nào dễ tính nhầm nhất",
             videoAdult: "nếu nghỉ ở tháng thứ 10 thì tổng cộng mất bao nhiêu tiền",
@@ -548,65 +545,123 @@
           }
         ],
         cTestNote:
-          "🔍 Phép thử chữ C (Complication · Cái khó): Thử bỏ ô (C) đi — nếu lúc đó AI trả lời KHÁC HẲN so với khi giữ ô (C), nghĩa là bạn đã viết đúng “Cái khó” của riêng mình!",
+          "Phép thử chữ C (Cái khó): Thử che ô (C) lại — nếu lúc đó AI trả lời khác hẳn so với khi có ô (C), nghĩa là bạn đã viết đúng “Cái khó” của riêng mình!",
         revealNote:
-          "✓ Thuộc nằm lòng trọn đời: S (Situation · Hoàn cảnh: “Mình đang…”) — C (Complication · Cái khó: “…nhưng…”) — Q (Question · Câu hỏi: “Mình cần biết…?”) + TRANG – SÓT – BÀN!"
+          "✓ Đã ghép xong câu lệnh chuẩn S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) + Trang – Sót – Bàn! Bạn có thể bấm Sao chép để dùng ngay trên Gemini."
       },
 
-      // ==================== ACTIVITY 4 (STEP 6): VERIFY SOURCE & UNLOCK "A - ANSWER" ====================
+      // ==================== ACTIVITY 4 (STEP 6): SINGLE-TASK SOURCE PAGE AUDIT ====================
       {
-        id: "act-write",
-        kind: "write",
+        id: "act-audit",
+        kind: "audit",
         spineActive: [2],
         showScqLegend: false,
-        phase: "Thực hành Mình kiểm cuối (D3 & D4) · 5 phút",
-        title: "Bài tập 4: Mở trang gốc bắt lỗi & Tự chốt chữ A (Answer)",
-        lead: "Bản nháp giả lập bên dưới cố tình cài 1 chi tiết sai lệch so với PDF 12 trang. Hãy mở tệp PDF gốc bắt lỗi (D3) rồi tự chốt quyết định của bạn để mở khóa mảnh ghép cuối cùng: Chữ A!",
-        verifyCaseAdult: {
-          badge: "Bản nháp giả lập để tập thẩm định (Có cài 1 chỗ lệch số liệu)",
-          aiDraft:
-            "“Theo hợp đồng thuê mặt bằng 12 trang, nếu bạn trả quán ở tháng thứ 10: (1) Mất tiền cọc 75 triệu tại Điều 4, Trang 3; (2) Hoàn trả 100% gói hỗ trợ cải tạo 37,5 triệu tại Điều 5, Trang 4; (3) Phạt khấu hao thiết bị tại Phụ lục 02, Trang 12 là 50 triệu đồng và được trả góp trong 30 ngày.”",
-          checkHint:
-            "🔍 Mở PDF kiểm tra: Lật Điều 7.2 (Trang 7) và Phụ lục 02 (Trang 12) xem mức khấu hao khung tháng 7–12 thực sự là 50 triệu hay 85 triệu, và hạn thanh toán là 30 ngày hay 05 ngày làm việc!",
-          sampleVerify:
-            "Đã mở PDF gốc đối chiếu: Trang 3 (cọc 75tr) và Trang 4 (hoàn trả 37,5tr) đúng; NHƯNG Phụ lục 02 Trang 12 ghi rõ khung tháng 7–12 phạt khấu hao thiết bị 85 triệu đồng (không phải 50 triệu) và Điều 7.2 Trang 7 bắt thanh toán trong 05 ngày làm việc (không phải 30 ngày). Tổng mất thực tế là 197,5 triệu!",
-          sampleDecision:
-            "Mình tự chốt (Chữ A): Chưa đặt bút ký lúc 3h chiều nay; chủ động nhắn chủ nhà xin đàm phán tách gói thiết bị Phụ lục 02, xin phép được sang nhượng quán và hạ trần tăng giá năm hai xuống dưới 10%."
-        },
-        verifyCaseStudent: {
-          badge: "Bản nháp giả lập để tập thẩm định (Có cài 1 chỗ lệch sử liệu)",
-          aiDraft:
-            "“Theo tập tư liệu Trần Quốc Toản 12 trang: (1) Sự kiện bóp nát quả cam diễn ra tại Hội nghị Bình Than năm 1282 ở Trang 3; (2) Chính sử Trang 4 chép Quốc Toản tự cầm cam bóp nát và viết 6 chữ lên cờ; (3) Chính sử Đại Việt sử ký toàn thư ở Trang 4 cũng ghi rõ Trần Quốc Toản anh dũng hy sinh ở tuổi 16 ngay tại trận Chương Dương năm 1285.”",
-          checkHint:
-            "🔍 Mở PDF kiểm tra: Lật đúng Trang 4 (trích đoạn Đại Việt sử ký toàn thư) và Trang 8 (Bảng đối chiếu) xem chính sử có ghi tuổi mất 16 và nguyên nhân hy sinh không!",
-          sampleVerify:
-            "Đã mở PDF gốc đối chiếu: Trang 3 (Bình Than 1282) và ý đầu Trang 4 đúng; NHƯNG ý số (3) sai! Trang 4 và Trang 8 ghi rõ chính sử KHÔNG chép năm mất hay nguyên nhân mất (năm 1285 ông đã khoảng 18–19 tuổi); chi tiết hy sinh tuổi 16 là sáng tạo văn học của Nguyễn Huy Tưởng.",
-          sampleDecision:
-            "Nhóm tự chốt (Chữ A): 2 phút đầu diễn cảnh Bình Than 1282 đối thoại với Hoài Nhân vương Trần Kiện đúng chính sử Trang 4; 1 phút cuối người dẫn chuyện tách riêng lời bình tôn vinh chi tiết quả cam vua ban, lá cờ mẹ thêu và hình tượng tuổi 16 trong văn học."
-        },
-        fields: [
+        phase: "Bài tập 4 · Thực hành Bước 3 (Mình kiểm cuối) · 3 phút",
+        title: "Bài tập 4: Đối chiếu trang gốc — Bấm chọn dòng AI báo sai",
+        lead: "Nhiệm vụ: Đọc 3 dòng AI tóm tắt (có ghi số trang), đối chiếu với 3 trích đoạn trang gốc ngay bên dưới và bấm chọn đúng 1 dòng AI đã báo sai!",
+        casesAdult: [
           {
-            label: "1. Kết quả thẩm định trang gốc (D3 — Chi tiết nào đúng, chi tiết nào bị lệch khi bạn tự mở PDF 12 trang đối chiếu?):",
-            placeholderAdult:
-              "Ví dụ: Mở Phụ lục 02 Trang 12 và Điều 7.2 Trang 7 thấy mức khấu hao thực tế là 85 triệu (không phải 50 triệu) và phải nộp trong 05 ngày làm việc...",
-            placeholderStudent:
-              "Ví dụ: Mở Trang 4 và Trang 8 thấy chính sử không ghi hy sinh tuổi 16 ở Chương Dương; chi tiết hy sinh tuổi 16 nằm ở cột Văn học Trang 8..."
+            title: "Ca kiểm chứng 1/2 · Soi mức phạt nghỉ ở tháng thứ 10",
+            aiClaims: [
+              "Khoản 4.2 (Trang 3): Chấm dứt hợp đồng trước hạn 36 tháng sẽ mất toàn bộ 75.000.000đ tiền đặt cọc.",
+              "Khoản 5.2 (Trang 4): Dừng thuê trước mốc 24 tháng phải hoàn trả 100% gói hỗ trợ cải tạo là 37.500.000đ.",
+              "Phụ lục 02 (Trang 12): Nghỉ ở tháng thứ 10 phải nộp 55.000.000đ khấu hao thiết bị trong vòng 30 ngày."
+            ],
+            wrongIndex: 2,
+            excerpts: [
+              {
+                page: "Trang 3 · Khoản 4.2",
+                quote: "“Trường hợp Bên B đơn phương chấm dứt trước thời hạn 36 tháng vì bất kỳ lý do kinh doanh nào, Bên B mất toàn bộ khoản tiền đặt cọc 75.000.000 đồng này.”"
+              },
+              {
+                page: "Trang 4 · Khoản 5.2",
+                quote: "“Trường hợp Hợp đồng chấm dứt trước mốc 24 tháng… Bên B có nghĩa vụ hoàn trả 100% giá trị gói hỗ trợ cải tạo ban đầu (37.500.000 đồng) ngoài khoản tiền đặt cọc.”"
+              },
+              {
+                page: "Trang 12 · Phụ lục 02 (Mục 3.1 & 3.2)",
+                quote: "“STT 2 — Từ tháng thứ 07 đến hết tháng thứ 12: 85.000.000 đồng… Toàn bộ các khoản quyết toán phải được Bên B chuyển khoản hoàn tất cho Bên A trong vòng 05 (năm) ngày làm việc.”"
+              }
+            ],
+            explain:
+              "AI ghi đúng “Phụ lục 02 (Trang 12)” nhưng đọc lệch dòng trong bảng: tháng thứ 10 nằm ở khung tháng 07–12 nên mất tới 85.000.000đ (không phải 55 triệu của khung tháng 19–24) và phải nộp gắt trong 05 ngày làm việc (không phải 30 ngày)!"
           },
           {
-            label: "2. Chữ A — Answer (Quyết định cuối cùng do chính bạn tự chốt sau khi đã kiểm trang gốc):",
-            placeholderAdult:
-              "Ví dụ: Mình chốt chưa ký vội chiều nay; đề nghị chủ nhà bỏ khoản phạt thiết bị Phụ lục 02 và cho phép sang nhượng...",
-            placeholderStudent:
-              "Ví dụ: Nhóm chốt 2 phút đầu diễn chính sử Bình Than 1282 (Trang 3–4), 1 phút cuối tách riêng lời bình văn học (Trang 8)..."
+            title: "Ca kiểm chứng 2/2 · Soi quyền sang nhượng & điều khoản tăng giá thuê",
+            aiClaims: [
+              "Khoản 2.1 (Trang 2): Nghiêm cấm tự ý sang nhượng mặt bằng khi chưa có văn bản chấp thuận của Bên A.",
+              "Khoản 3.2 (Trang 3): Từ tháng thứ 13, giá thuê chỉ tăng tối đa 8%/năm và hai bên phải ký phụ lục mới.",
+              "Khoản 12.2 (Trang 8): Sụt giảm doanh thu bán hàng không được coi là bất khả kháng để miễn tiền phạt."
+            ],
+            wrongIndex: 1,
+            excerpts: [
+              {
+                page: "Trang 2 · Khoản 2.1",
+                quote: "“Nghiêm cấm tự ý sang nhượng hoặc cho thuê lại một phần hay toàn bộ mặt bằng khi chưa có văn bản chấp thuận của Bên A.”"
+              },
+              {
+                page: "Trang 3 · Khoản 3.2",
+                quote: "“Kể từ tháng thứ 13 trở đi… đơn giá thuê mặt bằng tại Khoản 3.1 được điều chỉnh tăng tự động theo biên độ cố định là 18%/năm mà không cần ký phụ lục điều chỉnh giá.”"
+              },
+              {
+                page: "Trang 8 · Khoản 12.2",
+                quote: "“Khó khăn thị trường, sụt giảm doanh thu bán hàng hoặc thay đổi thị hiếu người tiêu dùng không được coi là sự kiện bất khả kháng để miễn trừ nghĩa vụ tại Điều 4, Điều 5 và Điều 11.”"
+              }
+            ],
+            explain:
+              "AI ghi đúng “Khoản 3.2 (Trang 3)” nhưng báo sai cả hai ý: hợp đồng gốc quy định tăng tự động cố định tới 18%/năm và KHÔNG cần ký phụ lục! Vì vậy Bước 3 (Mình kiểm cuối) là bắt buộc: AI nháp · Mình kiểm · Mình chốt!"
           }
         ],
-        unlockAnswerNote:
-          "🎁 Đã mở khóa mảnh ghép cuối: Chữ A — Answer (Câu trả lời chốt)! S · C · Q là phần Mình nghĩ trước, AI làm cùng ra bản nháp, còn chữ A luôn là quyết định do chính Mình kiểm cuối & Tự chốt!",
-        checklist: [
-          "D1 · Mình nghĩ trước (S–C–Q): Đã nắm rõ S · Situation (Hoàn cảnh), C · Complication (Cái khó), Q · Question (Câu hỏi).",
-          "D2 · AI làm cùng (Trang–Sót–Bàn): Đã yêu cầu AI trích rõ số trang, chỉ điểm mù dễ sót và gợi ý hướng thảo luận.",
-          "D3 · Mình kiểm cuối (Mở trang gốc): Đã tự tay mở đúng trang trên tệp PDF gốc để kiểm chứng từng chi tiết.",
-          "D4 · Tự chốt chữ A (Answer): Chính mình hiểu rõ và chịu trách nhiệm quyết định cuối (không tải CCCD/dữ liệu mật lên mạng)."
+        casesStudent: [
+          {
+            title: "Ca kiểm chứng 1/2 · Soi ranh giới Chính sử và Tiểu thuyết",
+            aiClaims: [
+              "Phần 1.1 (Trang 3): Sự kiện bóp nát quả cam diễn ra tại Hội nghị Bình Than năm 1282, không phải Diên Hồng.",
+              "Phần 2.1 (Trang 4): Chính sử chép Quốc Toản tự cầm quả cam bóp nát lúc nào không biết, không có cảnh vua ban cam.",
+              "Phần 2.2 (Trang 5): Đại Việt sử ký toàn thư ghi rõ Trần Quốc Toản hy sinh ở tuổi 16 tại trận Chương Dương năm 1285."
+            ],
+            wrongIndex: 2,
+            excerpts: [
+              {
+                page: "Trang 3 · Mục 1.1",
+                quote: "“Sự kiện Hoài Văn hầu Trần Quốc Toản không được vào dự bàn và bóp nát quả cam diễn ra tại Hội nghị Bình Than năm 1282, tuyệt đối không phải ở Hội nghị Diên Hồng của các bậc bô lão!”"
+              },
+              {
+                page: "Trang 4 · Mục 2.1",
+                quote: "“Vua thấy Hoài Văn hầu Quốc Toản, Hoài Nhân vương Kiện đều còn trẻ tuổi, không cho dự bàn. Quốc Toản trong lòng hổ thẹn, phẫn khích, tay cầm quả cam, bóp nát lúc nào không biết.”"
+              },
+              {
+                page: "Trang 5 · Mục 2.2",
+                quote: "“Đến năm 1285 khi xông pha ở Chương Dương – Tây Kết, ông khoảng 18–19 tuổi! Đại Việt sử ký toàn thư hoàn toàn KHÔNG chép ông tử trận trên chiến trường năm 1285, không chép hy sinh ở tuổi 16!”"
+              }
+            ],
+            explain:
+              "AI ghi đúng “Phần 2.2 (Trang 5)” nhưng lại quen thói trộn giai thoại văn học thành chính sử: Trang 5 khẳng định năm 1285 ông khoảng 18–19 tuổi và chính sử KHÔNG hề chép ông hy sinh ở tuổi 16!"
+          },
+          {
+            title: "Ca kiểm chứng 2/2 · Soi câu nói lịch sử & quy định chấm điểm",
+            aiClaims: [
+              "Phần 4.2 (Trang 9): Câu nói nổi tiếng “Ta thà làm quỷ nước Nam, chứ không thèm làm vương đất Bắc!” là của Trần Quốc Toản.",
+              "Phần 4.3 (Trang 10): Cùng bị từ chối dự bàn ở Bình Than năm 1282 với Quốc Toản còn có Hoài Nhân vương Trần Kiện.",
+              "Phần 5.1 (Trang 11): Chi tiết vua trao cam và mẹ thêu cờ vàng bắt buộc phải tách riêng sang phần lời bình văn học."
+            ],
+            wrongIndex: 0,
+            excerpts: [
+              {
+                page: "Trang 9 · Mục 4.2",
+                quote: "“Câu nói ‘Ta thà làm quỷ nước Nam, chứ không thèm làm vương đất Bắc!’ — Người nói chính xác: Bảo Nghĩa vương Trần Bình Trọng (tháng Giêng năm 1285 tại bãi Đà Mạc). AI đôi khi lắp nhầm câu này vào miệng Trần Quốc Toản!”"
+              },
+              {
+                page: "Trang 10 · Mục 4.3",
+                quote: "“Trên bến Bình Than năm 1282 không chỉ có một mình Trần Quốc Toản bị từ chối vì nhỏ tuổi, mà có tới hai người trẻ tuổi: người thứ hai là Hoài Nhân vương Kiện.”"
+              },
+              {
+                page: "Trang 11 · Mục 5.1",
+                quote: "“Nếu nhóm muốn nhắc tới các chi tiết giàu cảm xúc của nhà văn Nguyễn Huy Tưởng (như vua trao cam, mẹ thêu cờ vàng, ngã xuống tuổi 16), bắt buộc phải tách riêng ở lời bình và nói rõ đó là chi tiết văn học.”"
+              }
+            ],
+            explain:
+              "AI ghi đúng “Phần 4.2 (Trang 9)” nhưng gán nhầm câu nói bất hủ của Bảo Nghĩa vương Trần Bình Trọng cho Trần Quốc Toản! Chỉ cần mở đúng trang gốc dò 10 giây là bắt được ngay: AI nháp · Mình kiểm · Mình chốt!"
+          }
         ]
       }
     ],
@@ -616,10 +671,10 @@
         id: "cf-lease",
         forScenario: "adult",
         title: "Hồ sơ mẫu 1 · Hợp đồng thuê mặt bằng kinh doanh (12 trang)",
-        meta: "Dành cho Người lớn · Gồm cấm sang nhượng (Trang 2), tiền cọc (Trang 3), hỗ trợ sửa quán (Trang 4), hạn phạt 05 ngày (Trang 7) & khấu hao thiết bị (Trang 12).",
+        meta: "Dành cho Người lớn · Gồm cấm sang nhượng (Trang 2), tiền cọc & tăng giá 18% (Trang 3), hỗ trợ sửa quán (Trang 4), chấm dứt sớm (Trang 7) & khấu hao thiết bị 05 ngày (Trang 12).",
         fileHref: "tai-lieu/Hop-dong-Thue-mat-bang-Mau-12-trang.pdf",
         answerSummary:
-          "Bẫy ngầm khi trả mặt bằng ở tháng thứ 10: (1) Mất cọc 75 triệu (Điều 4, Trang 3); (2) Hoàn trả 37,5 triệu gói hỗ trợ cải tạo mặt bằng (Điều 5, Trang 4); (3) Thanh toán 85 triệu khấu hao thiết bị khung tháng 7–12 (Phụ lục 02, Trang 12) → Tổng thiệt hại 197,5 triệu đồng, buộc quyết toán trong 05 ngày làm việc (Trang 7) và cấm tự ý sang nhượng (Trang 2)."
+          "Bẫy ngầm khi trả mặt bằng ở tháng thứ 10: (1) Mất cọc 75 triệu (Điều 4, Trang 3); (2) Hoàn trả 37,5 triệu gói hỗ trợ cải tạo mặt bằng (Điều 5, Trang 4); (3) Thanh toán 85 triệu khấu hao thiết bị khung tháng 7–12 và buộc chuyển khoản hoàn tất trong 05 ngày làm việc (Phụ lục 02, Trang 12) → Tổng thiệt hại 197,5 triệu đồng, không được cấn trừ vào tiền cọc (Điều 11, Trang 7) và cấm tự ý sang nhượng (Trang 2)."
       },
       {
         id: "cf-history",
