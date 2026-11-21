@@ -630,6 +630,49 @@
         answerSummary:
           "Ranh giới cốt lõi: Sự kiện diễn ra tại Hội nghị Bình Than năm 1282 (Trang 3). Chính sử Đại Việt sử ký toàn thư (Trang 4) chỉ ghi Quốc Toản (đứng cùng Hoài Nhân vương Trần Kiện) tự cầm cam bóp nát lúc nào không biết và viết 6 chữ lên cờ; năm 1285 (~18–19 tuổi) sát cánh cùng Trần Nhật Duật, Nguyễn Khoái ở Tây Kết – Chương Dương và sử không chép tuổi mất. Chi tiết vua ban cam, mẹ thêu cờ vàng và hy sinh tuổi 16 (Trang 8) là sáng tạo văn học — bắt buộc tách sang lời bình theo quy định Trang 11."
       }
-    ]
+    ],
+
+    homework4F: {
+      taskAdult:
+        "Đem S – C – Q + Trang – Sót – Bàn áp vào 1 tài liệu thật của bạn trên Gemini, tự mở trang gốc kiểm lại, rồi viết 4F ngay bên dưới để buổi sau xem lại.",
+      taskStudent:
+        "Đem S – C – Q + Trang – Sót – Bàn áp vào 1 đề cương hoặc tư liệu môn học thật trên Gemini, tự mở trang gốc dò lại, rồi viết 4F ngay bên dưới để buổi sau trao đổi.",
+      leadNote:
+        "Gập bài học lại rồi gõ thẳng vào từng mục — gõ tới mục nào chữ ví dụ mờ của mục đó sẽ tự biến mất:",
+      zones: [
+        {
+          key: "facts",
+          title: "1. Facts",
+          cue: "Đã nghe gì từ bài & đã tự làm gì (tài liệu thật, câu lệnh đã gõ, trang gốc đã mở)?",
+          ghost:
+            "🍳 VD (chuyện học rán trứng): Xem clip dạy lửa nhỏ, cuộn lúc mặt trứng còn ướt.\n- Tối vào bếp rán thử 2 mẻ trên chảo mỏng: mẻ 1 để lửa vừa bị cháy xém & gãy đôi; mẻ 2 hạ nhỏ lửa thì cuộn được.",
+          rows: 3
+        },
+        {
+          key: "feelings",
+          title: "2. Feelings",
+          cue: "Lúc học và lúc tự làm thấy sao — vì sao? (thành thật với mình, không ai chấm)",
+          ghost:
+            "🍳 VD: Lúc xem clip thấy chủ quan vì nhìn đầu bếp lật nhẹ tênh tưởng dễ.\n- Lúc mẻ đầu cháy khét thì vừa quê vừa cay cú; tới mẻ 2 lành lặn mới thở phào.",
+          rows: 2
+        },
+        {
+          key: "findings",
+          title: "3. Findings",
+          cue: "Tưởng vậy, hóa ra…? (điều trước khi học & tự tay làm bạn chưa nhận ra)",
+          ghost:
+            "🍳 VD: Xem người khác làm mượt rất dễ tưởng mình đã biết làm.\n- Tưởng rách do tay lật vụng, hóa ra chảo mỏng ở nhà nóng gắt hơn bếp từ trong clip; chi tiết thử nhiệt đầu đũa clip có nói mà mình nghe lướt.",
+          rows: 3
+        },
+        {
+          key: "future",
+          title: "4. Future",
+          cue: "Lần tới làm việc nhỏ nào (tài liệu gì, khi nào) hoặc còn câu hỏi nào thắc mắc?",
+          ghost:
+            "🍳 VD: [ ] Sáng thứ Bảy rán lại: thử đầu đũa trước khi đổ trứng và nhấc chảo khỏi bếp 10 giây lúc cuộn.\n- [ ] Tìm hiểu xem pha thêm 1 thìa sữa tươi có giúp trứng đỡ khô nhanh không.",
+          rows: 2
+        }
+      ]
+    }
   };
 })();

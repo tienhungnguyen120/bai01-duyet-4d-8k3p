@@ -17,8 +17,10 @@
     { num: 4, short: "Bài tập 2", label: "Phân biệt & Bắt bệnh S – C – Q" },
     { num: 5, short: "Bài tập 3", label: "Tự nhớ & Ghép lệnh S – C – Q" },
     { num: 6, short: "Bài tập 4", label: "Mở trang gốc & Tự chốt chữ A" },
-    { num: 7, short: "Tổng kết", label: "Ôn nhanh S–C–Q & Hồ sơ PDF" }
+    { num: 7, short: "Tổng kết", label: "Ôn nhanh S–C–Q & Hồ sơ PDF" },
+    { num: 8, short: "Về nhà · 4F", label: "Bài tập về nhà · Suy ngẫm 4F" }
   ];
+  const TOTAL_STEPS = STEPS_META.length;
 
   const defaultTrackProgress = () => ({
     lastStep: 1,
@@ -27,6 +29,8 @@
     transcriptOpen: { scenario: false, fourD: false },
     recallChecked: false,
     recallVals: ["", "", ""],
+    fourF: { facts: "", feelings: "", findings: "", future: "" },
+    peekFourFExample: false,
     acts: {}
   });
 
@@ -132,7 +136,7 @@
     if (!scenario) {
       return { screen: "welcome", scenario: null, step: 0 };
     }
-    const step = Math.min(7, Math.max(1, Number(stepStr) || 1));
+    const step = Math.min(TOTAL_STEPS, Math.max(1, Number(stepStr) || 1));
     return { screen: "step", scenario, step };
   }
 
@@ -184,7 +188,7 @@
 
     progWrap.hidden = false;
     const stepMeta = STEPS_META[route.step - 1];
-    capLeft.textContent = `Trang ${route.step} / 7`;
+    capLeft.textContent = `Trang ${route.step} / ${TOTAL_STEPS}`;
     capRight.textContent = stepMeta.label;
 
     const segBtns = STEPS_META.map(sm => {
@@ -298,7 +302,7 @@
             "div",
             { className: "journey-card-head" },
             h("span", { className: "journey-audience" }, sc.audienceLabel || sc.badge),
-            doneCount > 0 && h("span", { className: "journey-resume-pill" }, `Đã qua ${doneCount}/7`)
+            doneCount > 0 && h("span", { className: "journey-resume-pill" }, `Đã qua ${doneCount}/${TOTAL_STEPS}`)
           ),
           h("h2", { className: "journey-title" }, sc.cardTitle || sc.shortName)
         ),
@@ -794,7 +798,7 @@
       h(
         "header",
         { className: "step-header" },
-        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / 7 · ${act.phase}`),
+        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / ${TOTAL_STEPS} · ${act.phase}`),
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
@@ -971,7 +975,7 @@
       h(
         "header",
         { className: "step-header" },
-        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / 7 · ${act.phase}`),
+        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / ${TOTAL_STEPS} · ${act.phase}`),
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
@@ -1236,7 +1240,7 @@
       h(
         "header",
         { className: "step-header" },
-        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / 7 · ${act.phase}`),
+        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / ${TOTAL_STEPS} · ${act.phase}`),
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
@@ -1391,7 +1395,7 @@
       h(
         "header",
         { className: "step-header" },
-        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / 7 · ${act.phase}`),
+        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / ${TOTAL_STEPS} · ${act.phase}`),
         h("h1", { className: "step-title", tabindex: "-1" }, act.title),
         h("p", { className: "step-lead" }, act.lead)
       ),
@@ -1620,10 +1624,213 @@
     configureDock({
       prevLabel: "← Bài tập 4",
       onPrev: () => goTo(scenarioId, 6),
-      statusText: "Bạn cũng có thể khám phá thêm hành trình còn lại",
-      nextLabel: `Xem thêm ${otherSc.badge} →`,
-      onNext: () => goTo(otherId, 1)
+      statusText: "Bước cuối: Áp dụng vào việc thật & viết suy ngẫm 4F",
+      nextLabel: "Bài tập về nhà (Viết 4F) →",
+      onNext: () => goTo(scenarioId, 8),
+      pulse: true
     });
+  }
+
+  // ==================== STEP 8: HOMEWORK 4F (SINGLE SHEET WITH GHOST EXAMPLES) ====================
+  function renderStep8Homework4F(container, scenarioId, tProg) {
+    const hw = DATA.homework4F;
+    if (!hw) return;
+
+    if (!tProg.fourF || typeof tProg.fourF !== "object") {
+      tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
+    }
+    const bag = tProg.fourF;
+    const otherId = scenarioId === "adult" ? "student" : "adult";
+    const otherSc = DATA.scenarios[otherId];
+    const isStudent = scenarioId === "student";
+    const taskText = isStudent ? hw.taskStudent : hw.taskAdult;
+
+    function hasAnyText() {
+      return hw.zones.some(z => (bag[z.key] || "").trim().length > 0);
+    }
+
+    function autoFit(ta, minRows) {
+      ta.rows = minRows;
+      ta.style.height = "auto";
+      ta.style.height = ta.scrollHeight + "px";
+    }
+
+    function compileNote() {
+      return hw.zones
+        .map(z => `${z.title}:\n${(bag[z.key] || "").trim() || "- (Chưa ghi)"}`)
+        .join("\n\n");
+    }
+
+    function syncDoneAndDock() {
+      const any = hasAnyText();
+      if (any && !tProg.doneSteps[8]) {
+        tProg.doneSteps[8] = true;
+        saveState();
+        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 8 });
+      }
+      configureDock({
+        prevLabel: "← Trang 7: Tổng kết",
+        onPrev: () => goTo(scenarioId, 7),
+        statusText: any
+          ? "Đã lưu bài suy ngẫm 4F vào trình duyệt!"
+          : "Bạn cũng có thể khám phá thêm hành trình còn lại",
+        nextLabel: `Xem thêm ${otherSc.badge} →`,
+        onNext: () => goTo(otherId, 1)
+      });
+    }
+
+    const wrap = h("div", { className: "hw-4f-wrap" });
+
+    function drawSheet(focusIdx = null) {
+      const any = hasAnyText();
+      const saveLbl = h(
+        "span",
+        { className: `save-status ${any ? "saved" : ""}` },
+        any
+          ? "Đã tự lưu trên máy này ✓"
+          : "Chữ mờ chỉ là ví dụ chuyện rán trứng — cứ đặt chuột gõ đè lên"
+      );
+
+      const inputs = [];
+      const zoneNodes = hw.zones.map((z, idx) => {
+        const typed = (bag[z.key] || "").trim().length > 0;
+        const ta = h("textarea", {
+          className: "f-zone-input",
+          rows: z.rows,
+          placeholder: z.ghost,
+          value: bag[z.key] || "",
+          "aria-label": `${z.title} — ${z.cue}`,
+          onInput: e => {
+            const wasEmpty = !hasAnyText();
+            bag[z.key] = e.target.value;
+            saveState();
+            autoFit(ta, z.rows);
+            const nowAny = hasAnyText();
+            if (wasEmpty !== nowAny) {
+              syncDoneAndDock();
+              drawSheet(idx);
+            } else {
+              saveLbl.textContent = nowAny
+                ? "Đã tự lưu trên máy này ✓"
+                : "Chữ mờ chỉ là ví dụ chuyện rán trứng — cứ đặt chuột gõ đè lên";
+              saveLbl.classList.toggle("saved", nowAny);
+            }
+          }
+        });
+        inputs.push({ ta, rows: z.rows });
+
+        return h(
+          "div",
+          { className: "f-zone" },
+          h(
+            "div",
+            { className: "f-zone-head" },
+            h("span", { className: "f-zone-title" }, z.title),
+            h("span", { className: "f-zone-cue" }, `· ${z.cue}`)
+          ),
+          typed &&
+            tProg.peekFourFExample &&
+            h("div", { className: "peek-example-bar" }, z.ghost.replace(/\n/g, " ")),
+          ta
+        );
+      });
+
+      wrap.replaceChildren(
+        h(
+          "div",
+          { className: "hw-task-line" },
+          h("strong", null, "🏠 Bài tập về nhà: "),
+          taskText
+        ),
+        h(
+          "section",
+          { className: "notebook-sheet" },
+          h(
+            "div",
+            { className: "sheet-top" },
+            h("p", { className: "sheet-note" }, "✍️ ", h("strong", null, hw.leadNote)),
+            h(
+              "div",
+              { style: "display:flex;gap:0.4rem" },
+              any &&
+                h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "icon-tool-btn",
+                    onClick: () => {
+                      tProg.peekFourFExample = !tProg.peekFourFExample;
+                      saveState();
+                      drawSheet();
+                    }
+                  },
+                  tProg.peekFourFExample ? "Ẩn ví dụ nhắc" : "👁️ Xem lại ví dụ"
+                ),
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "icon-tool-btn",
+                  onClick: () => {
+                    if (
+                      hasAnyText() &&
+                      !window.confirm("Xóa nội dung đang gõ để hiện lại chữ ví dụ mờ ban đầu?")
+                    ) {
+                      return;
+                    }
+                    tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
+                    Object.assign(bag, tProg.fourF);
+                    tProg.peekFourFExample = false;
+                    delete tProg.doneSteps[8];
+                    saveState();
+                    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 8 });
+                    syncDoneAndDock();
+                    drawSheet();
+                  }
+                },
+                "Xóa trắng"
+              )
+            )
+          ),
+          h("div", null, ...zoneNodes),
+          h(
+            "div",
+            { className: "sheet-footer" },
+            saveLbl,
+            h(
+              "button",
+              {
+                type: "button",
+                className: "btn-tactile",
+                style: "padding:0.48rem 0.95rem;font-size:0.86rem",
+                onClick: () => {
+                  if (!hasAnyText()) {
+                    showToast("Hãy gõ vài dòng vào các mục trước khi sao chép nhé!");
+                    if (inputs[0]) inputs[0].ta.focus();
+                    return;
+                  }
+                  copyText(compileNote());
+                }
+              },
+              "📋 Sao chép bài 4F để nộp"
+            )
+          )
+        )
+      );
+
+      requestAnimationFrame(() => {
+        inputs.forEach(({ ta, rows }) => autoFit(ta, rows));
+        if (focusIdx !== null && inputs[focusIdx]) {
+          const fTa = inputs[focusIdx].ta;
+          fTa.focus();
+          fTa.setSelectionRange(fTa.value.length, fTa.value.length);
+        }
+      });
+    }
+
+    container.append(wrap);
+    syncDoneAndDock();
+    drawSheet();
   }
 
   // ==================== MAIN RENDER DISPATCH ====================
@@ -1665,7 +1872,8 @@
       if (route.step === 1) renderStep1Scenario(screenWrap, route.scenario, tProg);
       else if (route.step === 2) renderStep2FourD(screenWrap, route.scenario, tProg);
       else if (route.step >= 3 && route.step <= 6) renderActivityByStep(screenWrap, route.scenario, tProg, route.step);
-      else renderStep7Summary(screenWrap, route.scenario, tProg);
+      else if (route.step === 7) renderStep7Summary(screenWrap, route.scenario, tProg);
+      else renderStep8Homework4F(screenWrap, route.scenario, tProg);
     }
 
     stage.replaceChildren(screenWrap);

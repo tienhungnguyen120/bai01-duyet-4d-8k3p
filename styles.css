@@ -314,7 +314,8 @@ button:disabled {
 
 .step-segments {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 6px;
 }
 
@@ -1826,4 +1827,130 @@ button:disabled {
 .clean-input:focus {
   outline: none;
   border-color: var(--ink);
+}
+
+/* ==================== STEP 8: HOMEWORK 4F SINGLE GHOST-EXAMPLE SHEET ==================== */
+.hw-4f-wrap {
+  max-width: 780px;
+  margin: -0.65rem auto 0;
+}
+
+.hw-task-line {
+  margin: 0 0 0.7rem;
+  padding: 0.56rem 0.95rem;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  border-left: 3.5px solid var(--accent-solid);
+  font-size: 0.87rem;
+  line-height: 1.48;
+  color: var(--ink);
+}
+
+.notebook-sheet {
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 0.95rem 1.4rem 0.85rem;
+  box-shadow: 0 12px 32px rgba(20, 20, 19, 0.055);
+}
+
+.sheet-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px solid var(--surface-subtle);
+}
+
+.sheet-note {
+  margin: 0;
+  font-size: 0.81rem;
+  color: var(--ink-muted);
+}
+
+.f-zone {
+  padding: 0.32rem 0 0.4rem;
+  border-bottom: 1px dashed var(--border-strong);
+}
+
+.f-zone:last-of-type {
+  border-bottom: none;
+}
+
+.f-zone-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.42rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.16rem;
+}
+
+.f-zone-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.f-zone-cue {
+  font-size: 0.81rem;
+  color: var(--ink-secondary);
+}
+
+.f-zone-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.08rem 0;
+  font-family: inherit;
+  font-size: 0.91rem;
+  line-height: 1.52;
+  color: var(--ink);
+  resize: none;
+  overflow: hidden;
+  display: block;
+}
+
+.f-zone-input:focus {
+  outline: none;
+}
+
+.f-zone-input::placeholder {
+  color: #9b9589;
+  font-style: italic;
+  opacity: 1;
+}
+
+.peek-example-bar {
+  margin: 0.12rem 0 0.2rem;
+  padding: 0.32rem 0.58rem;
+  border-radius: 7px;
+  background: var(--surface-subtle);
+  font-size: 0.77rem;
+  line-height: 1.44;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.sheet-footer {
+  margin-top: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--surface-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.save-status {
+  font-size: 0.79rem;
+  color: var(--ink-muted);
+}
+
+.save-status.saved {
+  color: var(--success);
+  font-weight: 600;
 }
