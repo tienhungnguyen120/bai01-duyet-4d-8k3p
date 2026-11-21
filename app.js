@@ -4,10 +4,13 @@
   const DATA = window.LESSON_01_DATA;
   if (!DATA) return;
 
-  const STORAGE_KEY = "bai01-pageturn-state-v5";
+  const STORAGE_KEY = "bai01-pageturn-state-v6";
   const PALETTE_KEY = "bai01-palette";
-  const PROMPT_TAIL =
-    DATA.promptTail ||
+  const PROMPT_TAIL_GENERAL =
+    DATA.promptTailGeneral ||
+    "Chỉ thêm chỗ mình dễ sót, gợi ý hướng giải quyết và thảo luận cùng mình nhé.";
+  const PROMPT_TAIL_DOC =
+    DATA.promptTailDoc ||
     "Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.";
 
   const STEPS_META = [
@@ -15,10 +18,9 @@
     { num: 2, short: "Quy luật 4D", label: "Clip Quy luật Tư duy 4D" },
     { num: 3, short: "Bài tập 1", label: "Việc này thuộc bước nào trong 4D?" },
     { num: 4, short: "Bài tập 2", label: "Bắt bệnh câu lệnh S – C – Q" },
-    { num: 5, short: "Bài tập 3", label: "Tự ghép câu lệnh S – C – Q" },
-    { num: 6, short: "Bài tập 4", label: "Đối chiếu trang gốc — Bắt lỗi AI" },
-    { num: 7, short: "Về nhà · 4F", label: "Bài tập về nhà · Suy ngẫm 4F" },
-    { num: 8, short: "Tổng kết", label: "Ôn nhanh S–C–Q & Hồ sơ PDF" }
+    { num: 5, short: "Làm việc thật", label: "Áp dụng S – C – Q vào việc thật" },
+    { num: 6, short: "Về nhà · 4F", label: "Bài tập về nhà · Suy ngẫm 4F" },
+    { num: 7, short: "Tổng kết", label: "Lưu câu lệnh của bạn & Hồ sơ mẫu" }
   ];
   const TOTAL_STEPS = STEPS_META.length;
 
@@ -27,8 +29,6 @@
     visited: {},
     doneSteps: {},
     transcriptOpen: { scenario: false, fourD: false },
-    recallChecked: false,
-    recallVals: ["", "", ""],
     fourF: { facts: "", feelings: "", findings: "", future: "" },
     peekFourFExample: false,
     acts: {}
@@ -989,212 +989,330 @@
     drawQuiz();
   }
 
-  // ==================== ACTIVITY KIND: FILL (SINGLE-TASK SCQ PROMPT BUILDER) ====================
-  function renderActivityFill(container, scenarioId, tProg, act, stepNum) {
+  // Helper: Snapshot of learner's real-world S-C-Q prompt & Gemini answer from Step 5
+  function buildAssembledPrompt(values, hasDoc) {
+    const sVal = (values[0] || "").trim();
+    const cVal = (values[1] || "").trim();
+    const qVal = (values[2] || "").trim().replace(/\?+$/, "");
+    if (!sVal && !cVal && !qVal) return "";
+    const tail = hasDoc ? PROMPT_TAIL_DOC : PROMPT_TAIL_GENERAL;
+    return `Mình đang ${sVal || "[S · Hoàn cảnh]"}, nhưng ${cVal || "[C · Cái khó]"}. Mình cần biết: ${qVal || "[Q · Câu hỏi]"}? ${tail}`;
+  }
+
+  function getRealWorkSnapshot(tProg) {
+    const rw = tProg.acts["act-real"] || {};
+    const vals = Array.isArray(rw.values) ? rw.values : ["", "", ""];
+    const assembled = buildAssembledPrompt(vals, !!rw.hasDoc);
+    const finalPrompt = (rw.promptEdited ? rw.customPrompt || "" : assembled).trim();
+    const aiAnswer = (rw.aiAnswer || "").trim();
+    return { vals, hasDoc: !!rw.hasDoc, finalPrompt, aiAnswer };
+  }
+
+  // ==================== ACTIVITY KIND: REAL (STEP 5: REAL-WORLD S-C-Q + PROMPT + GEMINI ANSWER) ====================
+  function renderActivityReal(container, scenarioId, tProg, act, stepNum) {
     if (
       !tProg.acts[act.id] ||
       !Array.isArray(tProg.acts[act.id].values) ||
       tProg.acts[act.id].values.length !== act.fields.length
     ) {
-      tProg.acts[act.id] = { values: act.fields.map(() => "") };
+      tProg.acts[act.id] = {
+        values: act.fields.map(() => ""),
+        hasDoc: false,
+        promptEdited: false,
+        customPrompt: "",
+        aiAnswer: "",
+        showIdeas: false
+      };
     }
     const aState = tProg.acts[act.id];
     const isStudent = scenarioId === "student";
     const fields = act.fields;
-    const matchedCaseFile = DATA.caseFiles.find(cf => cf.forScenario === scenarioId) || DATA.caseFiles[0];
-    const transferBrief = isStudent ? act.transferPromptStudent : act.transferPromptAdult;
+    const ideas = isStudent ? act.topicIdeasStudent || [] : act.topicIdeasAdult || [];
+
+    function currentPromptText() {
+      if (aState.promptEdited) return aState.customPrompt || "";
+      return buildAssembledPrompt(aState.values, !!aState.hasDoc);
+    }
 
     function isComplete() {
-      return fields.every((_, i) => (aState.values[i] || "").trim().length > 0);
+      return currentPromptText().trim().length > 0 && (aState.aiAnswer || "").trim().length > 0;
     }
 
-    function buildPromptText() {
-      const sVal = (aState.values[0] || "").trim() || "[S]";
-      const cVal = (aState.values[1] || "").trim() || "[C]";
-      const qVal = (aState.values[2] || "").trim().replace(/\?+$/, "") || "[Q]";
-      return `Mình đang ${sVal}, nhưng ${cVal}. Mình cần biết: ${qVal}? ${PROMPT_TAIL}`;
-    }
+    const ideasDrawer = h(
+      "div",
+      { className: "ideas-drawer", hidden: !aState.showIdeas },
+      h("span", { className: "ideas-drawer-lbl" }, "Gợi ý vài chủ đề gần gũi bạn có thể đem ra hỏi ngay:"),
+      h(
+        "div",
+        { className: "ideas-chip-row" },
+        ...ideas.map(txt => h("span", { className: "idea-static-chip" }, txt))
+      )
+    );
 
-    const synBody = h("div", { className: "synthesis-body", style: "white-space:pre-line" });
-    const cTestBanner = h("div", { className: "c-test-banner", hidden: true }, act.cTestNote || "");
-    const selfCheckBanner = h("div", { className: "explain-box ok", hidden: !tProg.doneSteps[stepNum] }, act.revealNote);
-
-    const copyBtn = h(
+    const ideasToggleBtn = h(
       "button",
       {
         type: "button",
-        disabled: !isComplete(),
-        className: "btn-tactile",
-        style: "margin-top:0.95rem",
-        onClick: () => copyText(buildPromptText())
+        className: "icon-tool-btn",
+        onClick: () => {
+          aState.showIdeas = !aState.showIdeas;
+          ideasDrawer.hidden = !aState.showIdeas;
+          ideasToggleBtn.textContent = aState.showIdeas ? "Ẩn gợi ý chủ đề" : "Chưa nghĩ ra việc gì để hỏi?";
+          saveState();
+        }
       },
-      "Sao chép câu lệnh để dán vào Gemini"
+      aState.showIdeas ? "Ẩn gợi ý chủ đề" : "Chưa nghĩ ra việc gì để hỏi?"
     );
 
-    const samplePdfLink = h(
-      "a",
+    const scqInputs = [];
+    const promptTa = h("textarea", {
+      id: "real-prompt-box",
+      rows: 3,
+      className: "clean-textarea prompt-compose-box",
+      placeholder:
+        "Câu lệnh sẽ tự ghép khi bạn gõ 3 ô S – C – Q ở trên (hoặc bạn có thể gõ / dán thẳng câu lệnh của mình vào đây)...",
+      value: currentPromptText()
+    });
+
+    const resyncBtn = h(
+      "button",
       {
-        href: matchedCaseFile.fileHref,
-        target: "_blank",
-        rel: "noopener",
-        className: "btn-secondary",
-        style: "margin-top:0.95rem"
+        type: "button",
+        className: "icon-tool-btn",
+        hidden: !aState.promptEdited,
+        onClick: () => {
+          aState.promptEdited = false;
+          aState.customPrompt = "";
+          promptTa.value = currentPromptText();
+          resyncBtn.hidden = true;
+          saveState();
+          syncStateAndDock();
+        }
       },
-      "Mở PDF mẫu 12 trang ↗"
+      "↺ Ghép lại từ 3 ô S – C – Q"
     );
 
-    function syncStatementAndDock() {
-      const slotNode = (i, fallback, colorCls) => {
-        const val = (aState.values[i] || "").trim();
-        return h("span", { className: `syn-slot ${colorCls} ${val ? "filled" : "empty"}` }, val || fallback);
-      };
+    promptTa.addEventListener("input", e => {
+      aState.promptEdited = true;
+      aState.customPrompt = e.target.value;
+      resyncBtn.hidden = false;
+      saveState();
+      syncStateAndDock();
+    });
 
-      synBody.replaceChildren(
-        "Mình đang ",
-        slotNode(0, "[S · Hoàn cảnh]", "slot-blue"),
-        ", nhưng ",
-        slotNode(1, "[C · Cái khó]", "slot-amber"),
-        ". Mình cần biết: ",
-        slotNode(2, "[Q · Câu hỏi]", "slot-mint"),
-        `? ${PROMPT_TAIL}`
-      );
+    const docCheckbox = h("input", {
+      type: "checkbox",
+      checked: !!aState.hasDoc,
+      onChange: e => {
+        aState.hasDoc = e.target.checked;
+        if (!aState.promptEdited) {
+          promptTa.value = currentPromptText();
+        }
+        saveState();
+        syncStateAndDock();
+      }
+    });
 
+    const cTestBanner = h("div", { className: "c-test-banner", hidden: true }, act.cTestNote || "");
+    const doneBanner = h("div", { className: "explain-box ok", hidden: !isComplete() }, act.doneNote || "");
+
+    const openGeminiBtn = h(
+      "button",
+      {
+        type: "button",
+        className: "btn-tactile",
+        onClick: () => {
+          const pText = currentPromptText().trim();
+          if (!pText) {
+            showToast("Hãy ghi tình huống S – C – Q hoặc nhập câu lệnh trước khi sao chép nhé!");
+            if (scqInputs[0]) scqInputs[0].focus();
+            return;
+          }
+          copyText(pText);
+          window.open("https://gemini.google.com/app", "_blank", "noopener");
+        }
+      },
+      "Sao chép câu lệnh & Mở Gemini ↗"
+    );
+
+    const copyOnlyBtn = h(
+      "button",
+      {
+        type: "button",
+        className: "btn-secondary",
+        onClick: () => {
+          const pText = currentPromptText().trim();
+          if (!pText) {
+            showToast("Hãy ghi tình huống S – C – Q hoặc nhập câu lệnh trước nhé!");
+            if (scqInputs[0]) scqInputs[0].focus();
+            return;
+          }
+          copyText(pText);
+        }
+      },
+      "Chỉ sao chép câu lệnh"
+    );
+
+    const answerTa = h("textarea", {
+      id: "real-gemini-answer",
+      rows: 4,
+      className: "clean-textarea",
+      placeholder: act.answerPlaceholder || "Dán đoạn trả lời tâm đắc nhất của Gemini vào đây...",
+      value: aState.aiAnswer || "",
+      onInput: e => {
+        aState.aiAnswer = e.target.value;
+        saveState();
+        syncStateAndDock();
+      }
+    });
+
+    function syncStateAndDock() {
       const hasC = (aState.values[1] || "").trim().length > 0;
       cTestBanner.hidden = !hasC;
 
       const ready = isComplete();
-      copyBtn.disabled = !ready;
+      doneBanner.hidden = !ready;
+
       if (ready && !tProg.doneSteps[stepNum]) {
         tProg.doneSteps[stepNum] = true;
-        selfCheckBanner.hidden = false;
+        saveState();
+        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: stepNum });
+      } else if (!ready && tProg.doneSteps[stepNum]) {
+        delete tProg.doneSteps[stepNum];
         saveState();
         updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: stepNum });
       }
 
+      const hasPrompt = currentPromptText().trim().length > 0;
       configureDock({
         prevLabel: `← Trang ${stepNum - 1}: ${STEPS_META[stepNum - 2].short}`,
         onPrev: () => goTo(scenarioId, stepNum - 1),
         statusText: ready
-          ? "Câu lệnh S – C – Q + Trang – Sót – Bàn đã hoàn chỉnh!"
-          : "Điền đủ 3 ô S – C – Q bên trên để ghép câu lệnh",
+          ? "Đã lưu câu lệnh & câu trả lời tâm đắc!"
+          : hasPrompt
+          ? "Sao chép qua hỏi Gemini rồi dán đoạn trả lời tâm đắc vào mục 3"
+          : "Ghi việc thật bạn đang vướng vào S – C – Q bên trên",
         nextLabel: `Tiếp tục sang ${STEPS_META[stepNum].short} →`,
         onNext: () => goTo(scenarioId, stepNum + 1),
-        nextSuccess: ready
+        nextSuccess: ready,
+        pulse: ready
       });
     }
 
-    const textareas = [];
-
     const fieldNodes = fields.map((f, idx) => {
-      const hint = isStudent ? f.hintStudent : f.hintAdult;
-      const sample = isStudent ? f.sampleStudent : f.sampleAdult;
-      const id = `causal-slot-${f.slot}`;
-
-      const ta = h("textarea", {
+      const ph = isStudent ? f.placeholderStudent : f.placeholderAdult;
+      const id = `real-scq-${f.slot}`;
+      const inp = h("input", {
         id,
-        rows: 2,
-        className: "clean-textarea",
-        placeholder: `Ví dụ: ${sample}`,
+        type: "text",
+        className: "clean-input real-scq-input",
+        placeholder: ph,
         value: aState.values[idx] || "",
         onInput: e => {
           aState.values[idx] = e.target.value;
+          if (!aState.promptEdited) {
+            promptTa.value = currentPromptText();
+          }
           saveState();
-          syncStatementAndDock();
+          syncStateAndDock();
         }
       });
-      textareas.push(ta);
+      scqInputs.push(inp);
 
       return h(
         "div",
-        { className: `causal-field field-${f.color}` },
+        { className: `causal-field field-${f.color} compact-scq-field` },
         h(
           "label",
           { for: id, className: "causal-label" },
           h("span", { className: `scq-letter-chip chip-${f.color}` }, f.slot),
           h("span", { className: "faded-meaning revealed" }, `${f.en} · ${f.vi.toUpperCase()} (${f.signal})`)
         ),
-        h("p", { className: "causal-hint" }, hint),
-        ta
+        inp
       );
     });
 
-    const toolbar = h(
-      "div",
-      { className: "helper-toolbar" },
-      h("span", null, `Tình huống thực hành · ${isStudent ? "Hành trình Học sinh" : "Hành trình Người lớn"}`),
-      h(
-        "div",
-        { style: "display:flex;gap:0.45rem;flex-wrap:wrap" },
-        h(
-          "button",
-          {
-            type: "button",
-            className: "icon-tool-btn",
-            onClick: () => {
-              fields.forEach((f, idx) => {
-                const sample = isStudent ? f.sampleStudent : f.sampleAdult;
-                aState.values[idx] = sample;
-                textareas[idx].value = sample;
-              });
-              saveState();
-              syncStatementAndDock();
-              showToast("Đã điền gợi ý mẫu cho tình huống mới!");
-            }
-          },
-          "Điền mẫu gợi ý"
-        ),
-        h(
-          "button",
-          {
-            type: "button",
-            className: "icon-tool-btn",
-            onClick: () => {
-              fields.forEach((f, idx) => {
-                const vSample = isStudent ? f.videoStudent || f.sampleStudent : f.videoAdult || f.sampleAdult;
-                aState.values[idx] = vSample;
-                textareas[idx].value = vSample;
-              });
-              saveState();
-              syncStatementAndDock();
-              showToast("Đã điền câu lệnh S – C – Q trong video thực chiến!");
-            }
-          },
-          "Xem câu mẫu trong video"
-        ),
-        h(
-          "button",
-          {
-            type: "button",
-            className: "icon-tool-btn",
-            onClick: () => {
-              fields.forEach((_, idx) => {
-                aState.values[idx] = "";
-                textareas[idx].value = "";
-              });
-              saveState();
-              syncStatementAndDock();
-            }
-          },
-          "Xóa trống"
-        )
-      )
+    const clearAllBtn = h(
+      "button",
+      {
+        type: "button",
+        className: "icon-tool-btn",
+        onClick: () => {
+          if ((currentPromptText().trim() || (aState.aiAnswer || "").trim()) && !window.confirm("Xóa trắng phần thực hành này để viết lại việc khác?")) {
+            return;
+          }
+          aState.values = fields.map(() => "");
+          aState.hasDoc = false;
+          aState.promptEdited = false;
+          aState.customPrompt = "";
+          aState.aiAnswer = "";
+          scqInputs.forEach(inp => {
+            inp.value = "";
+          });
+          docCheckbox.checked = false;
+          promptTa.value = "";
+          answerTa.value = "";
+          resyncBtn.hidden = true;
+          saveState();
+          syncStateAndDock();
+        }
+      },
+      "Xóa trắng"
     );
 
     const card = h(
       "div",
-      { className: "surface-card" },
-      transferBrief && h("div", { className: "scenario-brief-box" }, transferBrief),
-      toolbar,
-      h("div", { className: "causal-grid" }, ...fieldNodes),
-      cTestBanner,
+      { className: "surface-card real-practice-card" },
+      // Block 1: Think first with S - C - Q
       h(
         "div",
-        { className: "live-synthesis-card" },
-        h("p", { className: "synthesis-kicker" }, "Câu lệnh bỏ túi hoàn chỉnh: S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) + Trang – Sót – Bàn"),
-        synBody,
-        h("div", { style: "display:flex;gap:0.65rem;flex-wrap:wrap" }, copyBtn, samplePdfLink)
+        { className: "real-block" },
+        h(
+          "div",
+          { className: "real-block-head" },
+          h("span", { className: "real-block-title" }, "1. Ghi tình huống thật của bạn theo S – C – Q"),
+          h("div", { style: "display:flex;gap:0.45rem;flex-wrap:wrap" }, ideasToggleBtn, clearAllBtn)
+        ),
+        ideasDrawer,
+        h("div", { className: "causal-grid compact-grid" }, ...fieldNodes),
+        cTestBanner
       ),
-      selfCheckBanner
+      // Block 2: Prompt (auto-built & editable/pasteable)
+      h(
+        "div",
+        { className: "real-block" },
+        h(
+          "div",
+          { className: "real-block-head" },
+          h("label", { for: "real-prompt-box", className: "real-block-title" }, "2. Câu lệnh (Prompt) bạn gửi cho Gemini"),
+          h(
+            "div",
+            { style: "display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap" },
+            resyncBtn,
+            h(
+              "label",
+              { className: "doc-toggle-lbl" },
+              docCheckbox,
+              h("span", null, "Mình có gửi kèm tài liệu")
+            )
+          )
+        ),
+        promptTa,
+        h("div", { className: "real-prompt-actions" }, openGeminiBtn, copyOnlyBtn)
+      ),
+      // Block 3: Paste favorite Gemini answer
+      h(
+        "div",
+        { className: "real-block" },
+        h(
+          "div",
+          { className: "real-block-head" },
+          h("label", { for: "real-gemini-answer", className: "real-block-title" }, "3. Dán đoạn trả lời tâm đắc nhất của Gemini")
+        ),
+        answerTa,
+        act.step3Reminder && h("p", { className: "real-step3-note" }, act.step3Reminder),
+        doneBanner
+      )
     );
 
     container.append(
@@ -1209,388 +1327,106 @@
       card
     );
 
-    syncStatementAndDock();
+    syncStateAndDock();
   }
 
-  // ==================== ACTIVITY KIND: AUDIT (SINGLE-TASK SOURCE PAGE ERROR SPOTTING) ====================
-  function renderActivityAudit(container, scenarioId, tProg, act, stepNum) {
-    const cases = scenarioId === "student" ? act.casesStudent : act.casesAdult;
-    const matchedCaseFile = DATA.caseFiles.find(cf => cf.forScenario === scenarioId) || DATA.caseFiles[0];
-
-    if (
-      !tProg.acts[act.id] ||
-      typeof tProg.acts[act.id].caseIdx !== "number" ||
-      !Array.isArray(tProg.acts[act.id].checked) ||
-      !Array.isArray(tProg.acts[act.id].solved)
-    ) {
-      tProg.acts[act.id] = {
-        caseIdx: 0,
-        checked: cases.map(() => ({})),
-        solved: cases.map(() => false)
-      };
-    }
-    const aState = tProg.acts[act.id];
-    const spineHost = h("div");
-    const cardHost = h("div", { className: "surface-card" });
-
-    function drawAudit() {
-      const idx = Math.max(0, Math.min(aState.caseIdx || 0, cases.length - 1));
-      const cObj = cases[idx];
-      if (!aState.checked[idx]) aState.checked[idx] = {};
-      const checkedMap = aState.checked[idx];
-      const isSolved = !!aState.solved[idx];
-      const allSolved = cases.every((_, i) => !!aState.solved[i]);
-
-      spineHost.replaceChildren(renderSpineStrip(allSolved ? [0, 1, 2] : act.spineActive));
-
-      if (allSolved && !tProg.doneSteps[stepNum]) {
-        tProg.doneSteps[stepNum] = true;
-        saveState();
-        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: stepNum });
-      }
-
-      const topHead = h(
-        "div",
-        { className: "audit-case-head" },
-        h(
-          "div",
-          { style: "display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap" },
-          h(
-            "div",
-            { className: "dot-track" },
-            ...cases.map((_, i) => {
-              let cls = "q-dot";
-              if (aState.solved[i]) cls += " right";
-              else if (i === idx) cls += " current";
-              return h("span", { className: cls });
-            })
-          ),
-          h("span", { className: "audit-case-title" }, cObj.title)
-        ),
-        h(
-          "a",
-          {
-            href: matchedCaseFile.fileHref,
-            target: "_blank",
-            rel: "noopener",
-            className: "audit-pdf-link"
-          },
-          "Mở tệp PDF gốc 12 trang ↗"
-        )
-      );
-
-      const claimsList = h(
-        "div",
-        { className: "audit-claims-list" },
-        ...cObj.aiClaims.map((claimText, cIdx) => {
-          const wasCheckedTrue = !!checkedMap[cIdx] && cIdx !== cObj.wrongIndex;
-          const showAsError = isSolved && cIdx === cObj.wrongIndex;
-          const showAsTrue = wasCheckedTrue || (isSolved && cIdx !== cObj.wrongIndex);
-
-          let cls = "audit-claim-btn";
-          if (showAsError) cls += " caught-error";
-          else if (showAsTrue) cls += " verified-true";
-
-          let badgeText = `Dòng ${cIdx + 1} · Bấm nếu dòng này báo sai`;
-          if (showAsError) badgeText = `✕ Dòng ${cIdx + 1} · AI báo sai so với trang gốc!`;
-          else if (showAsTrue) badgeText = `✓ Dòng ${cIdx + 1} · Khớp nguyên văn trang gốc`;
-
-          return h(
-            "button",
-            {
-              type: "button",
-              disabled: isSolved || wasCheckedTrue,
-              className: cls,
-              onClick: () => {
-                if (cIdx === cObj.wrongIndex) {
-                  aState.solved[idx] = true;
-                } else {
-                  checkedMap[cIdx] = true;
-                }
-                saveState();
-                drawAudit();
-              }
-            },
-            h("span", { className: "audit-claim-badge" }, badgeText),
-            h("span", { className: "audit-claim-text" }, claimText)
-          );
-        })
-      );
-
-      const triedTrueIndices = Object.keys(checkedMap)
-        .map(Number)
-        .filter(n => n !== cObj.wrongIndex);
-
-      let feedbackEl = null;
-      if (isSolved) {
-        feedbackEl = h(
-          "div",
-          { className: "explain-box ok", role: "status", style: "margin-top:0.9rem" },
-          h("strong", null, "✓ Bắt trúng lỗi của AI! "),
-          cObj.explain
-        );
-      } else if (triedTrueIndices.length > 0) {
-        const lastTrue = triedTrueIndices[triedTrueIndices.length - 1];
-        feedbackEl = h(
-          "div",
-          { className: "explain-box", role: "status", style: "margin-top:0.9rem" },
-          h("strong", null, `Dòng ${lastTrue + 1} khớp hoàn toàn với ${cObj.excerpts[lastTrue].page}! `),
-          "Hãy đối chiếu các dòng còn lại với trích đoạn trang gốc bên dưới để bấm trúng dòng AI báo sai."
-        );
-      }
-
-      const excerptsGrid = h(
-        "div",
-        { className: "audit-excerpts-grid" },
-        ...cObj.excerpts.map((ex, exIdx) => {
-          const isTargetPage = isSolved && exIdx === cObj.wrongIndex;
-          return h(
-            "div",
-            { className: `audit-excerpt-card ${isTargetPage ? "highlight-source" : ""}` },
-            h("span", { className: "audit-excerpt-page" }, `📄 ${ex.page}`),
-            h("p", { className: "audit-excerpt-quote" }, ex.quote)
-          );
-        })
-      );
-
-      const navRow =
-        isSolved &&
-        h(
-          "div",
-          { style: "margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap" },
-          idx > 0 &&
-            h(
-              "button",
-              {
-                type: "button",
-                className: "btn-secondary",
-                onClick: () => {
-                  aState.caseIdx = idx - 1;
-                  saveState();
-                  drawAudit();
-                }
-              },
-              "‹ Xem lại ca trước"
-            ),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "btn-secondary",
-              onClick: () => {
-                aState.caseIdx = 0;
-                aState.checked = cases.map(() => ({}));
-                aState.solved = cases.map(() => false);
-                saveState();
-                drawAudit();
-              }
-            },
-            `Làm lại ${cases.length} ca kiểm chứng`
-          )
-        );
-
-      cardHost.replaceChildren(
-        ...[
-          topHead,
-          h("p", { className: "audit-section-lbl" }, "1. Bản tóm tắt của AI — Bấm chọn 1 dòng AI báo sai:"),
-          claimsList,
-          feedbackEl,
-          h(
-            "p",
-            { className: "audit-section-lbl", style: "margin-top:1.25rem" },
-            "2. Trích nguyên văn trang gốc từ PDF 12 trang để đối chiếu:"
-          ),
-          excerptsGrid,
-          navRow
-        ].filter(Boolean)
-      );
-
-      const isLastCase = idx === cases.length - 1;
-      configureDock({
-        prevLabel: idx > 0 ? `← Ca ${idx}/${cases.length}` : `← Trang ${stepNum - 1}: ${STEPS_META[stepNum - 2].short}`,
-        onPrev: () => {
-          if (idx > 0) {
-            aState.caseIdx = idx - 1;
-            saveState();
-            drawAudit();
-          } else {
-            goTo(scenarioId, stepNum - 1);
-          }
-        },
-        statusText: !isSolved
-          ? `Đối chiếu trang gốc và bấm chọn 1 dòng AI báo sai (${idx + 1}/${cases.length})`
-          : allSolved
-          ? `Đã bắt lỗi thành công ${cases.length}/${cases.length} ca kiểm chứng!`
-          : `Đã bắt trúng lỗi ở ca ${idx + 1}/${cases.length}`,
-        nextLabel:
-          isSolved && !isLastCase
-            ? `Sang ca kiểm chứng ${idx + 2}/${cases.length} →`
-            : allSolved
-            ? `Hoàn thành 4 bài tập · Sang ${STEPS_META[stepNum].short} →`
-            : `Bỏ qua sang ${STEPS_META[stepNum].short} →`,
-        onNext: () => {
-          if (isSolved && !isLastCase) {
-            aState.caseIdx = idx + 1;
-            saveState();
-            drawAudit();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          } else {
-            goTo(scenarioId, stepNum + 1);
-          }
-        },
-        nextSuccess: isSolved,
-        pulse: isSolved
-      });
-    }
-
-    container.append(
-      spineHost,
-      h(
-        "header",
-        { className: "step-header" },
-        h("p", { className: "step-eyebrow" }, `TRANG ${stepNum} / ${TOTAL_STEPS} · ${act.phase}`),
-        h("h1", { className: "step-title", tabindex: "-1" }, act.title),
-        h("p", { className: "step-lead" }, act.lead)
-      ),
-      cardHost
-    );
-
-    drawAudit();
-  }
-
-  // ==================== STEP 8: SUMMARY + 3-SLOT ACTIVE RECALL + PDF CASE FILES ====================
-  function renderStep8Summary(container, scenarioId, tProg) {
-    tProg.doneSteps[8] = true;
-    if (!Array.isArray(tProg.recallVals)) tProg.recallVals = ["", "", ""];
+  // ==================== STEP 7: SUMMARY (NO MEMORY QUIZ — SHOWCASE REAL WORK + PDF REF) ====================
+  function renderStep7Summary(container, scenarioId, tProg) {
+    tProg.doneSteps[7] = true;
     saveState();
-    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 8 });
+    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
 
-    const exSteps = [3, 4, 5, 6];
+    const exSteps = [3, 4, 5];
     const doneEx = exSteps.filter(n => !!tProg.doneSteps[n]);
     const missingEx = exSteps.filter(n => !tProg.doneSteps[n]);
     const otherId = scenarioId === "adult" ? "student" : "adult";
     const otherSc = DATA.scenarios[otherId];
+    const snap = getRealWorkSnapshot(tProg);
+    const hasRealWork = snap.finalPrompt.length > 0 || snap.aiAnswer.length > 0;
 
-    const fillVals = tProg.acts["act-fill"]?.values || [];
-    const hasFill = fillVals.some(v => (v || "").trim().length > 0);
-
-    // Non-blocking 3-Slot Active Recall Card (Zero hints first!)
-    const recallHost = h("section", { className: "surface-card" });
-    const normVi = s =>
-      (s || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/đ/g, "d")
-        .trim();
-
-    function drawRecallCard() {
-      const rVals = tProg.recallVals;
-      const okS = /hoan canh|tinh huong|situation/.test(normVi(rVals[0]));
-      const okC = /cai kho|kho khan|complication/.test(normVi(rVals[1]));
-      const okQ = /cau hoi|question/.test(normVi(rVals[2]));
-      const allOk = okS && okC && okQ;
-
-      const inputs = [
-        { code: "S", color: "blue", ok: okS, ph: "Gõ nghĩa tiếng Việt của S..." },
-        { code: "C", color: "amber", ok: okC, ph: "Gõ nghĩa tiếng Việt của C..." },
-        { code: "Q", color: "mint", ok: okQ, ph: "Gõ nghĩa tiếng Việt của Q..." }
-      ].map((item, idx) =>
-        h(
+    const realWorkBox = hasRealWork
+      ? h(
           "div",
-          { className: `recall-slot-box ${tProg.recallChecked ? (item.ok ? "ok" : "show-ans") : ""}` },
-          h(
-            "label",
-            { className: "recall-slot-lbl" },
-            h("span", { className: `scq-letter-chip chip-${item.color}` }, item.code),
-            h("span", null, `Chữ ${item.code} nghĩa là gì?`)
-          ),
-          h("input", {
-            type: "text",
-            className: "clean-input",
-            placeholder: item.ph,
-            value: rVals[idx] || "",
-            onInput: e => {
-              tProg.recallVals[idx] = e.target.value;
-              saveState();
-            }
-          })
-        )
-      );
-
-      const extraNodes = tProg.recallChecked
-        ? [
+          { className: "live-synthesis-card" },
+          h("p", { className: "synthesis-kicker" }, "Sản phẩm thật của bạn trong Bài 01"),
+          snap.finalPrompt &&
             h(
               "div",
-              { className: `explain-box ${allOk ? "ok" : ""}`, style: "margin-top:0.9rem" },
-              h(
-                "strong",
-                null,
-                allOk
-                  ? "✓ Thuộc nằm lòng 3/3 chữ! "
-                  : "💡 Đối chiếu nhanh để nhớ in vào đầu: "
-              ),
-              "S = Situation · Hoàn cảnh (“Mình đang…”)  |  C = Complication · Cái khó (“…nhưng…”)  |  Q = Question · Câu hỏi (“Mình cần biết…?”)."
+              { style: "margin-bottom:0.8rem" },
+              h("p", { className: "saved-sub-lbl" }, "Câu lệnh (Prompt) của bạn:"),
+              h("p", { className: "synthesis-body", style: "white-space:pre-wrap" }, snap.finalPrompt)
             ),
-            h("div", { style: "margin-top:0.85rem" }, renderScqLegend())
-          ]
-        : [];
-
-      recallHost.replaceChildren(
-        h("h2", { className: "transcript-title", style: "font-size:1.05rem" }, "🧠 Thử thách trí nhớ 10 giây (Không nhìn gợi ý): S – C – Q là gì?"),
-        h(
-          "p",
-          { className: "causal-hint", style: "margin-top:0.25rem;margin-bottom:0.85rem" },
-          "Tự gõ lại nghĩa tiếng Việt ngắn gọn của 3 chữ S – C – Q để khóa chặt công thức vào trí nhớ dài hạn:"
-        ),
-        h("div", { className: "recall-grid-3" }, ...inputs),
-        h(
-          "div",
-          { style: "margin-top:0.85rem;display:flex;gap:0.55rem;flex-wrap:wrap" },
+          snap.aiAnswer &&
+            h(
+              "div",
+              null,
+              h("p", { className: "saved-sub-lbl" }, "Đoạn trả lời tâm đắc từ Gemini:"),
+              h("p", { className: "saved-answer-body" }, snap.aiAnswer)
+            ),
           h(
-            "button",
-            {
-              type: "button",
-              className: "btn-tactile",
-              onClick: () => {
-                tProg.recallChecked = true;
-                saveState();
-                drawRecallCard();
-              }
-            },
-            "Kiểm tra trí nhớ S – C – Q"
-          ),
-          tProg.recallChecked &&
+            "div",
+            { style: "margin-top:0.9rem;display:flex;gap:0.55rem;flex-wrap:wrap" },
+            h(
+              "button",
+              {
+                type: "button",
+                className: "btn-tactile",
+                onClick: () => {
+                  const bundle = [
+                    snap.finalPrompt ? `CÂU LỆNH CỦA TÔI:\n${snap.finalPrompt}` : "",
+                    snap.aiAnswer ? `ĐOẠN TRẢ LỜI TÂM ĐẮC:\n${snap.aiAnswer}` : ""
+                  ]
+                    .filter(Boolean)
+                    .join("\n\n");
+                  copyText(bundle);
+                }
+              },
+              "Sao chép câu lệnh & câu trả lời"
+            ),
             h(
               "button",
               {
                 type: "button",
                 className: "btn-secondary",
-                onClick: () => {
-                  tProg.recallChecked = false;
-                  tProg.recallVals = ["", "", ""];
-                  saveState();
-                  drawRecallCard();
-                }
+                onClick: () => goTo(scenarioId, 5)
               },
-              "Nhẩm lại lần nữa"
+              "Chỉnh sửa ở Trang 5"
             )
-        ),
-        ...extraNodes
-      );
-    }
-
-    drawRecallCard();
+          )
+        )
+      : h(
+          "div",
+          { className: "live-synthesis-card" },
+          h("p", { className: "synthesis-kicker" }, "Công thức bỏ túi mang theo ra đời thật: S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"),
+          h(
+            "p",
+            { className: "synthesis-body" },
+            `“Mình đang [S · Hoàn cảnh], nhưng [C · Cái khó]. Mình cần biết: [Q · Câu hỏi]? ${PROMPT_TAIL_GENERAL}”`
+          ),
+          h(
+            "div",
+            { style: "margin-top:0.85rem" },
+            h(
+              "button",
+              {
+                type: "button",
+                className: "btn-secondary",
+                onClick: () => goTo(scenarioId, 5)
+              },
+              "Quay lại Trang 5 thử trên việc thật của bạn →"
+            )
+          )
+        );
 
     const summaryCard = h(
       "section",
       { className: "summary-hero-card" },
-      h("span", { className: "completion-badge" }, `✓ ĐÃ HOÀN TẤT ${doneEx.length}/4 BÀI TẬP 4D × SCQ`),
+      h("span", { className: "completion-badge" }, `✓ ĐÃ HOÀN TẤT ${doneEx.length}/3 BÀI THỰC HÀNH`),
       h("h1", { className: "step-title", tabindex: "-1" }, "Tổng kết Bài 01 · Nghĩ trước khi hỏi AI"),
       h(
         "p",
         { className: "step-lead" },
-        "Mình nghĩ trước bằng S – C – Q, giao AI làm cùng qua Trang – Sót – Bàn, rồi mở trang gốc kiểm cuối & tự chốt quyết định cuối!"
+        "Mình nghĩ trước bằng S – C – Q, giao AI làm cùng để mở rộng góc nhìn, rồi đối chiếu thực tế & tự chốt quyết định cuối!"
       ),
       renderSpineStrip([0, 1, 2]),
       missingEx.length > 0 &&
@@ -1598,8 +1434,8 @@
           "div",
           { className: "explain-box", style: "margin-top:1rem" },
           "Bạn còn ",
-          h("strong", null, `${missingEx.length} bài tập chưa hoàn tất`),
-          ". Bấm quay lại làm nốt bất cứ lúc nào: ",
+          h("strong", null, `${missingEx.length} phần thực hành chưa hoàn tất`),
+          ". Bấm quay lại bất cứ lúc nào: ",
           ...missingEx.map(n =>
             h(
               "button",
@@ -1613,18 +1449,7 @@
             )
           )
         ),
-      h(
-        "div",
-        { className: "live-synthesis-card" },
-        h("p", { className: "synthesis-kicker" }, "Công thức bỏ túi mang theo ra đời thật: S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) + Trang – Sót – Bàn"),
-        h(
-          "p",
-          { className: "synthesis-body" },
-          hasFill
-            ? `“Mình đang ${fillVals[0] || "[S · Hoàn cảnh]"}, nhưng ${fillVals[1] || "[C · Cái khó]"}. Mình cần biết: ${(fillVals[2] || "[Q · Câu hỏi]").replace(/\?+$/, "")}? ${PROMPT_TAIL}”`
-            : `“Mình đang [S · Hoàn cảnh], nhưng [C · Cái khó]. Mình cần biết: [Q · Câu hỏi]? ${PROMPT_TAIL}”`
-        )
-      )
+      realWorkBox
     );
 
     const sortedPDFs = [...DATA.caseFiles].sort((a, b) =>
@@ -1634,8 +1459,8 @@
     const pdfSection = h(
       "section",
       { className: "surface-card" },
-      h("h2", { className: "transcript-title", style: "font-size:1.1rem" }, "Kho Hồ sơ PDF 12 trang có cài bẫy (Tự mở đối chiếu)"),
-      h("p", { className: "causal-hint", style: "margin-top:0.25rem" }, "Mở trực tiếp bản PDF 12 trang để tận mắt dò các trang gốc được nhắc tới trong bài học:"),
+      h("h2", { className: "transcript-title", style: "font-size:1.1rem" }, "Hồ sơ PDF 12 trang trong video (Tham khảo thêm)"),
+      h("p", { className: "causal-hint", style: "margin-top:0.25rem" }, "Nếu muốn tự tay thử lại đúng 2 tình huống trong video bài học, bạn có thể tải / mở trực tiếp 2 tệp PDF 12 trang dưới đây:"),
       h(
         "div",
         { className: "pdf-grid" },
@@ -1651,7 +1476,7 @@
               h(
                 "details",
                 { className: "trap-spoiler" },
-                h("summary", null, "Xem đáp án các điểm bẫy ngầm"),
+                h("summary", null, "Xem tóm tắt các điểm bẫy ngầm trong tài liệu"),
                 h("p", { style: "margin:0.55rem 0 0;font-size:0.86rem;color:var(--ink-secondary)" }, cf.answerSummary)
               )
             ),
@@ -1665,19 +1490,19 @@
       )
     );
 
-    container.append(summaryCard, recallHost, pdfSection);
+    container.append(summaryCard, pdfSection);
 
     configureDock({
-      prevLabel: "← Trang 7: Về nhà · 4F",
-      onPrev: () => goTo(scenarioId, 7),
-      statusText: "Bạn cũng có thể khám phá thêm hành trình còn lại",
+      prevLabel: "← Trang 6: Về nhà · 4F",
+      onPrev: () => goTo(scenarioId, 6),
+      statusText: "Bạn cũng có thể xem thêm hành trình còn lại",
       nextLabel: `Xem thêm ${otherSc.badge} →`,
       onNext: () => goTo(otherId, 1)
     });
   }
 
-  // ==================== STEP 7: HOMEWORK 4F (SINGLE SHEET WITH GHOST EXAMPLES) ====================
-  function renderStep7Homework4F(container, scenarioId, tProg) {
+  // ==================== STEP 6: HOMEWORK 4F (SINGLE SHEET WITH PINNED REAL PROMPT) ====================
+  function renderStep6Homework4F(container, scenarioId, tProg) {
     const hw = DATA.homework4F;
     if (!hw) return;
 
@@ -1687,6 +1512,7 @@
     const bag = tProg.fourF;
     const isStudent = scenarioId === "student";
     const taskText = isStudent ? hw.taskStudent : hw.taskAdult;
+    const snap = getRealWorkSnapshot(tProg);
 
     function hasAnyText() {
       return hw.zones.some(z => (bag[z.key] || "").trim().length > 0);
@@ -1699,29 +1525,33 @@
     }
 
     function compileNote() {
-      return hw.zones
-        .map(z => `${z.title}:\n${(bag[z.key] || "").trim() || "- (Chưa ghi)"}`)
-        .join("\n\n");
+      const header = snap.finalPrompt ? `Câu lệnh thực tế đã hỏi:\n${snap.finalPrompt}\n\n` : "";
+      return (
+        header +
+        hw.zones
+          .map(z => `${z.title}:\n${(bag[z.key] || "").trim() || "- (Chưa ghi)"}`)
+          .join("\n\n")
+      );
     }
 
     function syncDoneAndDock() {
       const any = hasAnyText();
-      if (any && !tProg.doneSteps[7]) {
-        tProg.doneSteps[7] = true;
+      if (any && !tProg.doneSteps[6]) {
+        tProg.doneSteps[6] = true;
         saveState();
-        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
+        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 6 });
       }
       configureDock({
-        prevLabel: "← Trang 6: Bài tập 4",
-        onPrev: () => goTo(scenarioId, 6),
+        prevLabel: "← Trang 5: Làm việc thật",
+        onPrev: () => goTo(scenarioId, 5),
         statusText: any
           ? "Đã lưu bài suy ngẫm 4F vào trình duyệt!"
-          : "Áp dụng vào việc thật rồi ghi suy ngẫm 4F tại đây",
+          : "Ngẫm lại lần làm thật vừa rồi & ghi nhanh 4F tại đây",
         nextLabel: "Hoàn thành & Xem Tổng kết →",
         onNext: () => {
-          tProg.doneSteps[8] = true;
+          tProg.doneSteps[7] = true;
           saveState();
-          goTo(scenarioId, 8);
+          goTo(scenarioId, 7);
         },
         nextSuccess: any,
         pulse: any
@@ -1729,6 +1559,22 @@
     }
 
     const wrap = h("div", { className: "hw-4f-wrap" });
+
+    const pinnedCard =
+      snap.finalPrompt.length > 0 &&
+      h(
+        "div",
+        { className: "pinned-real-prompt" },
+        h("span", { className: "pinned-real-lbl" }, "Câu lệnh việc thật bạn vừa làm ở Trang 5:"),
+        h("p", { className: "pinned-real-text" }, `“${snap.finalPrompt}”`),
+        snap.aiAnswer.length > 0 &&
+          h(
+            "details",
+            { className: "trap-spoiler", style: "margin-top:0.4rem" },
+            h("summary", null, "Xem lại đoạn trả lời tâm đắc bạn đã lưu"),
+            h("p", { style: "margin:0.45rem 0 0;font-size:0.86rem;color:var(--ink-secondary);white-space:pre-wrap" }, snap.aiAnswer)
+          )
+      );
 
     function drawSheet(focusIdx = null) {
       const any = hasAnyText();
@@ -1785,86 +1631,89 @@
       });
 
       wrap.replaceChildren(
-        h(
-          "div",
-          { className: "hw-task-line" },
-          h("strong", null, "🏠 Bài tập về nhà: "),
-          taskText
-        ),
-        h(
-          "section",
-          { className: "notebook-sheet" },
+        ...[
           h(
             "div",
-            { className: "sheet-top" },
-            h("p", { className: "sheet-note" }, "✍️ ", h("strong", null, hw.leadNote)),
+            { className: "hw-task-line" },
+            h("strong", null, "🏠 Bài tập về nhà · 4F: "),
+            taskText
+          ),
+          pinnedCard,
+          h(
+            "section",
+            { className: "notebook-sheet" },
             h(
               "div",
-              { style: "display:flex;gap:0.4rem" },
-              any &&
+              { className: "sheet-top" },
+              h("p", { className: "sheet-note" }, "✍️ ", h("strong", null, hw.leadNote)),
+              h(
+                "div",
+                { style: "display:flex;gap:0.4rem" },
+                any &&
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "icon-tool-btn",
+                      onClick: () => {
+                        tProg.peekFourFExample = !tProg.peekFourFExample;
+                        saveState();
+                        drawSheet();
+                      }
+                    },
+                    tProg.peekFourFExample ? "Ẩn ví dụ nhắc" : "👁️ Xem lại ví dụ"
+                  ),
                 h(
                   "button",
                   {
                     type: "button",
                     className: "icon-tool-btn",
                     onClick: () => {
-                      tProg.peekFourFExample = !tProg.peekFourFExample;
+                      if (
+                        hasAnyText() &&
+                        !window.confirm("Xóa nội dung đang gõ để hiện lại chữ ví dụ mờ ban đầu?")
+                      ) {
+                        return;
+                      }
+                      tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
+                      Object.assign(bag, tProg.fourF);
+                      tProg.peekFourFExample = false;
+                      delete tProg.doneSteps[6];
                       saveState();
+                      updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 6 });
+                      syncDoneAndDock();
                       drawSheet();
                     }
                   },
-                  tProg.peekFourFExample ? "Ẩn ví dụ nhắc" : "👁️ Xem lại ví dụ"
-                ),
+                  "Xóa trắng"
+                )
+              )
+            ),
+            h("div", null, ...zoneNodes),
+            h(
+              "div",
+              { className: "sheet-footer" },
+              saveLbl,
               h(
                 "button",
                 {
                   type: "button",
-                  className: "icon-tool-btn",
+                  className: "btn-tactile",
+                  style: "padding:0.48rem 0.95rem;font-size:0.86rem",
                   onClick: () => {
-                    if (
-                      hasAnyText() &&
-                      !window.confirm("Xóa nội dung đang gõ để hiện lại chữ ví dụ mờ ban đầu?")
-                    ) {
+                    if (!hasAnyText()) {
+                      showToast("Hãy gõ vài dòng vào các mục trước khi sao chép nhé!");
+                      if (inputs[0]) inputs[0].ta.focus();
                       return;
                     }
-                    tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
-                    Object.assign(bag, tProg.fourF);
-                    tProg.peekFourFExample = false;
-                    delete tProg.doneSteps[7];
-                    saveState();
-                    updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 7 });
-                    syncDoneAndDock();
-                    drawSheet();
+                    copyText(compileNote());
                   }
                 },
-                "Xóa trắng"
+                "📋 Sao chép bài 4F để nộp"
               )
             )
-          ),
-          h("div", null, ...zoneNodes),
-          h(
-            "div",
-            { className: "sheet-footer" },
-            saveLbl,
-            h(
-              "button",
-              {
-                type: "button",
-                className: "btn-tactile",
-                style: "padding:0.48rem 0.95rem;font-size:0.86rem",
-                onClick: () => {
-                  if (!hasAnyText()) {
-                    showToast("Hãy gõ vài dòng vào các mục trước khi sao chép nhé!");
-                    if (inputs[0]) inputs[0].ta.focus();
-                    return;
-                  }
-                  copyText(compileNote());
-                }
-              },
-              "📋 Sao chép bài 4F để nộp"
-            )
           )
-        )
+        ].filter(Boolean)
       );
 
       requestAnimationFrame(() => {
@@ -1888,8 +1737,7 @@
     if (!act) return;
     if (act.kind === "sort") renderActivitySort(container, scenarioId, tProg, act, stepNum);
     else if (act.kind === "quiz") renderActivityQuiz(container, scenarioId, tProg, act, stepNum);
-    else if (act.kind === "fill") renderActivityFill(container, scenarioId, tProg, act, stepNum);
-    else if (act.kind === "audit") renderActivityAudit(container, scenarioId, tProg, act, stepNum);
+    else if (act.kind === "real") renderActivityReal(container, scenarioId, tProg, act, stepNum);
   }
 
   function render() {
@@ -1920,9 +1768,9 @@
 
       if (route.step === 1) renderStep1Scenario(screenWrap, route.scenario, tProg);
       else if (route.step === 2) renderStep2FourD(screenWrap, route.scenario, tProg);
-      else if (route.step >= 3 && route.step <= 6) renderActivityByStep(screenWrap, route.scenario, tProg, route.step);
-      else if (route.step === 7) renderStep7Homework4F(screenWrap, route.scenario, tProg);
-      else renderStep8Summary(screenWrap, route.scenario, tProg);
+      else if (route.step >= 3 && route.step <= 5) renderActivityByStep(screenWrap, route.scenario, tProg, route.step);
+      else if (route.step === 6) renderStep6Homework4F(screenWrap, route.scenario, tProg);
+      else renderStep7Summary(screenWrap, route.scenario, tProg);
     }
 
     stage.replaceChildren(screenWrap);

@@ -1,5 +1,7 @@
 (() => {
-  const PROMPT_TAIL =
+  const PROMPT_TAIL_GENERAL =
+    "Chỉ thêm chỗ mình dễ sót, gợi ý hướng giải quyết và thảo luận cùng mình nhé.";
+  const PROMPT_TAIL_DOC =
     "Đọc hết tài liệu, trả lời kèm số trang, chỉ thêm chỗ mình dễ sót, rồi gợi ý hướng giải quyết và thảo luận cùng mình nhé.";
 
   const SCQ_META = [
@@ -10,16 +12,16 @@
       fullLabel: "S · Situation (Hoàn cảnh)",
       signal: "“Mình đang…”",
       color: "blue",
-      desc: "Việc trước mắt & tài liệu bạn đang xử lý"
+      desc: "Việc hoặc bối cảnh bạn đang xử lý"
     },
-      {
+    {
       code: "C",
       en: "Complication",
       vi: "Cái khó",
       fullLabel: "C · Complication (Cái khó)",
       signal: "“…nhưng…”",
       color: "amber",
-      desc: "Giới hạn, điều kiện ngặt nghèo hoặc cái khó riêng của bạn"
+      desc: "Giới hạn, vướng mắc hoặc cái khó riêng của bạn"
     },
     {
       code: "Q",
@@ -28,7 +30,7 @@
       fullLabel: "Q · Question (Câu hỏi)",
       signal: "“Mình cần biết…?”",
       color: "mint",
-      desc: "Câu hỏi cụ thể cần trả lời để bạn ra quyết định"
+      desc: "Câu hỏi cụ thể cần làm rõ để bạn ra quyết định"
     }
   ];
 
@@ -38,7 +40,9 @@
     lessonTitle: "Tóm tắt tài liệu dài cùng Gemini",
     lessonLead:
       "Kết hợp hai bộ khung nổi tiếng: Khung làm chủ AI 4 Chữ D của Anthropic (gói gọn 3 bước: Mình nghĩ trước – AI làm cùng – Mình kiểm cuối) và Khuôn nghĩ trước S – C – Q của McKinsey: S (Situation · Hoàn cảnh) – C (Complication · Cái khó) – Q (Question · Câu hỏi).",
-    promptTail: PROMPT_TAIL,
+    promptTailGeneral: PROMPT_TAIL_GENERAL,
+    promptTailDoc: PROMPT_TAIL_DOC,
+    promptTail: PROMPT_TAIL_GENERAL,
     scqMeta: SCQ_META,
 
     spinePillars: [
@@ -48,11 +52,11 @@
       },
       {
         step: "2. AI làm cùng",
-        sub: "Kèm số trang · Chỉ chỗ dễ sót · Cùng bàn"
+        sub: "Chỉ chỗ dễ sót · Gợi ý & Cùng bàn"
       },
       {
         step: "3. Mình kiểm cuối",
-        sub: "Mở trang gốc đối chiếu & Tự chốt"
+        sub: "Đối chiếu thực tế & Tự chốt quyết định"
       }
     ],
 
@@ -66,7 +70,7 @@
         title: "Chủ nhà giục ký hợp đồng 12 trang lúc 3h chiều — Mà vốn của bạn chỉ đủ trụ 10 tháng!",
         desc: "Thực chiến nối 3 trang hợp đồng rời rạc trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
         duration: "02:30",
-        journeyMeta: "2 video ngắn · 4 bài tập + Bài về nhà 4F",
+        journeyMeta: "2 video ngắn · 3 bài thực hành + Suy ngẫm 4F",
         videoSrc: "media/tinh-huong-1-hop-dong.mp4",
         posterSrc: "media/poster-hop-dong.jpg",
         segments: [
@@ -162,7 +166,7 @@
         title: "Nhóm lớp 8A2 mãi đỉnh ❤️ nhận tệp Sử 12 trang — Cảnh chính chỉ được diễn chính sử!",
         desc: "Thực chiến lọc chính sử Đại Việt sử ký toàn thư và chi tiết văn học trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
         duration: "02:48",
-        journeyMeta: "2 video ngắn · 4 bài tập + Bài về nhà 4F",
+        journeyMeta: "2 video ngắn · 3 bài thực hành + Suy ngẫm 4F",
         videoSrc: "media/tinh-huong-2-lich-su.mp4",
         posterSrc: "media/poster-lich-su.jpg",
         segments: [
@@ -490,19 +494,15 @@
         ]
       },
 
-      // ==================== ACTIVITY 3 (STEP 5): SINGLE-TASK SCQ PROMPT BUILDER ====================
+      // ==================== ACTIVITY 3 (STEP 5): REAL-LIFE S-C-Q + PROMPT + GEMINI ANSWER ====================
       {
-        id: "act-fill",
-        kind: "fill",
-        spineActive: [0, 1],
+        id: "act-real",
+        kind: "real",
+        spineActive: [0, 1, 2],
         showScqLegend: false,
-        phase: "Bài tập 3 · Thực hành Bước 1 & 2 · 4 phút",
-        title: "Bài tập 3: Tự ghép câu lệnh S – C – Q",
-        lead: "Nhiệm vụ: Điền 3 ô S – C – Q cho tình huống mới dưới đây để ghép thành câu lệnh hoàn chỉnh.",
-        transferPromptAdult:
-          "Tình huống thực hành: Công ty vừa gửi Quy chế thưởng Tết & cam kết đào tạo dày 10 trang. Đầu tháng 3 tới (ngay sau Tết) bạn định xin nghỉ chuyển việc, nên rất lo bị thu hồi thưởng hoặc đền phí đào tạo.",
-        transferPromptStudent:
-          "Tình huống thực hành: Cô Sinh học vừa phát tài liệu chuyên đề Di truyền dày 10 trang. Sáng mai kiểm tra 15 phút chỉ hỏi dạng bài sơ đồ phả hệ, mà tối nay bạn chỉ còn đúng 45 phút ôn bài.",
+        phase: "Bài tập 3 · Đưa vào việc thật của bạn · 5 phút",
+        title: "Thực hành: Áp dụng S – C – Q vào việc thật của bạn",
+        lead: "Chọn 1 vấn đề thật bạn đang vướng (có tài liệu hay không có tài liệu đều được), ghép câu lệnh hỏi Gemini rồi dán lại câu lệnh & đoạn trả lời bạn tâm đắc nhất.",
         fields: [
           {
             slot: "S",
@@ -510,12 +510,10 @@
             vi: "Hoàn cảnh",
             signal: "Mình đang…",
             color: "blue",
-            hintAdult: "Gợi ý: đọc quy chế thưởng Tết và cam kết đào tạo 10 trang của công ty",
-            hintStudent: "Gợi ý: ôn tài liệu chuyên đề Di truyền 10 trang cô Sinh vừa phát",
-            sampleAdult: "đọc quy chế thưởng Tết và cam kết đào tạo 10 trang của công ty",
-            sampleStudent: "ôn tài liệu chuyên đề Di truyền 10 trang cô Sinh vừa phát",
-            videoAdult: "xem hợp đồng thuê mặt bằng mở quán 12 trang",
-            videoStudent: "viết kịch bản đóng vai 3 phút về Trần Quốc Toản từ tập tư liệu thầy phát"
+            placeholderAdult:
+              "VD: định mở quán cà phê nhỏ gần trường (hoặc đang phân vân đổi việc, đang xem hợp đồng…)",
+            placeholderStudent:
+              "VD: sắp thi giữa kỳ môn Toán (hoặc đang bí bài văn nghị luận, đang chia việc nhóm…)"
           },
           {
             slot: "C",
@@ -523,12 +521,10 @@
             vi: "Cái khó",
             signal: "…nhưng…",
             color: "amber",
-            hintAdult: "Gợi ý: đầu tháng 3 tới mình định xin nghỉ việc ngay sau khi nhận thưởng Tết",
-            hintStudent: "Gợi ý: sáng mai kiểm tra 15 phút phần sơ đồ phả hệ mà tối nay mình chỉ còn 45 phút ôn",
-            sampleAdult: "đầu tháng 3 tới mình định xin nghỉ việc ngay sau khi nhận thưởng Tết",
-            sampleStudent: "sáng mai kiểm tra 15 phút phần sơ đồ phả hệ mà tối nay mình chỉ còn 45 phút ôn",
-            videoAdult: "vốn mình chỉ trụ được 10 tháng nếu vắng khách",
-            videoStudent: "thầy bắt cảnh chính chỉ dùng chính sử còn chi tiết văn học phải tách riêng"
+            placeholderAdult:
+              "VD: vốn chỉ có 150 triệu và mình chưa từng tự vận hành quán bao giờ",
+            placeholderStudent:
+              "VD: hay mất điểm bài hình học vì không biết kẻ đường phụ bắt đầu từ đâu"
           },
           {
             slot: "Q",
@@ -536,133 +532,34 @@
             vi: "Câu hỏi",
             signal: "Mình cần biết…?",
             color: "mint",
-            hintAdult: "Gợi ý: nghỉ vào đầu tháng 3 thì có bị thu hồi thưởng Tết hay đền chi phí đào tạo không",
-            hintStudent: "Gợi ý: trang nào nêu quy tắc giải nhanh phả hệ và lỗi nào dễ tính nhầm nhất",
-            sampleAdult: "nghỉ vào đầu tháng 3 thì có bị thu hồi thưởng Tết hay đền chi phí đào tạo không",
-            sampleStudent: "trang nào nêu quy tắc giải nhanh phả hệ và lỗi nào dễ tính nhầm nhất",
-            videoAdult: "nếu nghỉ ở tháng thứ 10 thì tổng cộng mất bao nhiêu tiền",
-            videoStudent: "chi tiết nào được đưa vào cảnh diễn, chi tiết nào phải tách riêng"
+            placeholderAdult:
+              "VD: mình cần kiểm tra kỹ 3 điều gì trước khi xuống tiền thuê mặt bằng",
+            placeholderStudent:
+              "VD: mình nên ôn phần hình học theo thứ tự nào trong 2 tuần tới"
           }
+        ],
+        topicIdeasAdult: [
+          "Đang phân vân đổi việc / đàm phán lương",
+          "Đang tính mở quán / nhập hàng kinh doanh nhỏ",
+          "Đang xử lý 1 ca khách hàng / đồng nghiệp khó",
+          "Đang lên kế hoạch chi tiêu / trả nợ trong năm",
+          "Đang đọc 1 hợp đồng / quy chế dài cần soi kỹ"
+        ],
+        topicIdeasStudent: [
+          "Đang ôn thi 1 môn mình hay mất điểm",
+          "Đang bí dàn ý bài văn / bài thuyết trình",
+          "Đang phân công làm dự án nhóm trên lớp",
+          "Đang muốn chia thời gian tự học buổi tối",
+          "Đang đọc 1 tập đề cương / tư liệu dài thầy cô phát"
         ],
         cTestNote:
-          "Phép thử chữ C (Cái khó): Thử che ô (C) lại — nếu lúc đó AI trả lời khác hẳn so với khi có ô (C), nghĩa là bạn đã viết đúng “Cái khó” của riêng mình!",
-        revealNote:
-          "✓ Đã ghép xong câu lệnh chuẩn S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi) + Trang – Sót – Bàn! Bạn có thể bấm Sao chép để dùng ngay trên Gemini."
-      },
-
-      // ==================== ACTIVITY 4 (STEP 6): SINGLE-TASK SOURCE PAGE AUDIT ====================
-      {
-        id: "act-audit",
-        kind: "audit",
-        spineActive: [2],
-        showScqLegend: false,
-        phase: "Bài tập 4 · Thực hành Bước 3 (Mình kiểm cuối) · 3 phút",
-        title: "Bài tập 4: Đối chiếu trang gốc — Bấm chọn dòng AI báo sai",
-        lead: "Nhiệm vụ: Đọc 3 dòng AI tóm tắt (có ghi số trang), đối chiếu với 3 trích đoạn trang gốc ngay bên dưới và bấm chọn đúng 1 dòng AI đã báo sai!",
-        casesAdult: [
-          {
-            title: "Ca kiểm chứng 1/2 · Soi mức phạt nghỉ ở tháng thứ 10",
-            aiClaims: [
-              "Khoản 4.2 (Trang 3): Chấm dứt hợp đồng trước hạn 36 tháng sẽ mất toàn bộ 75.000.000đ tiền đặt cọc.",
-              "Khoản 5.2 (Trang 4): Dừng thuê trước mốc 24 tháng phải hoàn trả 100% gói hỗ trợ cải tạo là 37.500.000đ.",
-              "Phụ lục 02 (Trang 12): Nghỉ ở tháng thứ 10 phải nộp 55.000.000đ khấu hao thiết bị trong vòng 30 ngày."
-            ],
-            wrongIndex: 2,
-            excerpts: [
-              {
-                page: "Trang 3 · Khoản 4.2",
-                quote: "“Trường hợp Bên B đơn phương chấm dứt trước thời hạn 36 tháng vì bất kỳ lý do kinh doanh nào, Bên B mất toàn bộ khoản tiền đặt cọc 75.000.000 đồng này.”"
-              },
-              {
-                page: "Trang 4 · Khoản 5.2",
-                quote: "“Trường hợp Hợp đồng chấm dứt trước mốc 24 tháng… Bên B có nghĩa vụ hoàn trả 100% giá trị gói hỗ trợ cải tạo ban đầu (37.500.000 đồng) ngoài khoản tiền đặt cọc.”"
-              },
-              {
-                page: "Trang 12 · Phụ lục 02 (Mục 3.1 & 3.2)",
-                quote: "“STT 2 — Từ tháng thứ 07 đến hết tháng thứ 12: 85.000.000 đồng… Toàn bộ các khoản quyết toán phải được Bên B chuyển khoản hoàn tất cho Bên A trong vòng 05 (năm) ngày làm việc.”"
-              }
-            ],
-            explain:
-              "AI ghi đúng “Phụ lục 02 (Trang 12)” nhưng đọc lệch dòng trong bảng: tháng thứ 10 nằm ở khung tháng 07–12 nên mất tới 85.000.000đ (không phải 55 triệu của khung tháng 19–24) và phải nộp gắt trong 05 ngày làm việc (không phải 30 ngày)!"
-          },
-          {
-            title: "Ca kiểm chứng 2/2 · Soi quyền sang nhượng & điều khoản tăng giá thuê",
-            aiClaims: [
-              "Khoản 2.1 (Trang 2): Nghiêm cấm tự ý sang nhượng mặt bằng khi chưa có văn bản chấp thuận của Bên A.",
-              "Khoản 3.2 (Trang 3): Từ tháng thứ 13, giá thuê chỉ tăng tối đa 8%/năm và hai bên phải ký phụ lục mới.",
-              "Khoản 12.2 (Trang 8): Sụt giảm doanh thu bán hàng không được coi là bất khả kháng để miễn tiền phạt."
-            ],
-            wrongIndex: 1,
-            excerpts: [
-              {
-                page: "Trang 2 · Khoản 2.1",
-                quote: "“Nghiêm cấm tự ý sang nhượng hoặc cho thuê lại một phần hay toàn bộ mặt bằng khi chưa có văn bản chấp thuận của Bên A.”"
-              },
-              {
-                page: "Trang 3 · Khoản 3.2",
-                quote: "“Kể từ tháng thứ 13 trở đi… đơn giá thuê mặt bằng tại Khoản 3.1 được điều chỉnh tăng tự động theo biên độ cố định là 18%/năm mà không cần ký phụ lục điều chỉnh giá.”"
-              },
-              {
-                page: "Trang 8 · Khoản 12.2",
-                quote: "“Khó khăn thị trường, sụt giảm doanh thu bán hàng hoặc thay đổi thị hiếu người tiêu dùng không được coi là sự kiện bất khả kháng để miễn trừ nghĩa vụ tại Điều 4, Điều 5 và Điều 11.”"
-              }
-            ],
-            explain:
-              "AI ghi đúng “Khoản 3.2 (Trang 3)” nhưng báo sai cả hai ý: hợp đồng gốc quy định tăng tự động cố định tới 18%/năm và KHÔNG cần ký phụ lục! Vì vậy Bước 3 (Mình kiểm cuối) là bắt buộc: AI nháp · Mình kiểm · Mình chốt!"
-          }
-        ],
-        casesStudent: [
-          {
-            title: "Ca kiểm chứng 1/2 · Soi ranh giới Chính sử và Tiểu thuyết",
-            aiClaims: [
-              "Phần 1.1 (Trang 3): Sự kiện bóp nát quả cam diễn ra tại Hội nghị Bình Than năm 1282, không phải Diên Hồng.",
-              "Phần 2.1 (Trang 4): Chính sử chép Quốc Toản tự cầm quả cam bóp nát lúc nào không biết, không có cảnh vua ban cam.",
-              "Phần 2.2 (Trang 5): Đại Việt sử ký toàn thư ghi rõ Trần Quốc Toản hy sinh ở tuổi 16 tại trận Chương Dương năm 1285."
-            ],
-            wrongIndex: 2,
-            excerpts: [
-              {
-                page: "Trang 3 · Mục 1.1",
-                quote: "“Sự kiện Hoài Văn hầu Trần Quốc Toản không được vào dự bàn và bóp nát quả cam diễn ra tại Hội nghị Bình Than năm 1282, tuyệt đối không phải ở Hội nghị Diên Hồng của các bậc bô lão!”"
-              },
-              {
-                page: "Trang 4 · Mục 2.1",
-                quote: "“Vua thấy Hoài Văn hầu Quốc Toản, Hoài Nhân vương Kiện đều còn trẻ tuổi, không cho dự bàn. Quốc Toản trong lòng hổ thẹn, phẫn khích, tay cầm quả cam, bóp nát lúc nào không biết.”"
-              },
-              {
-                page: "Trang 5 · Mục 2.2",
-                quote: "“Đến năm 1285 khi xông pha ở Chương Dương – Tây Kết, ông khoảng 18–19 tuổi! Đại Việt sử ký toàn thư hoàn toàn KHÔNG chép ông tử trận trên chiến trường năm 1285, không chép hy sinh ở tuổi 16!”"
-              }
-            ],
-            explain:
-              "AI ghi đúng “Phần 2.2 (Trang 5)” nhưng lại quen thói trộn giai thoại văn học thành chính sử: Trang 5 khẳng định năm 1285 ông khoảng 18–19 tuổi và chính sử KHÔNG hề chép ông hy sinh ở tuổi 16!"
-          },
-          {
-            title: "Ca kiểm chứng 2/2 · Soi câu nói lịch sử & quy định chấm điểm",
-            aiClaims: [
-              "Phần 4.2 (Trang 9): Câu nói nổi tiếng “Ta thà làm quỷ nước Nam, chứ không thèm làm vương đất Bắc!” là của Trần Quốc Toản.",
-              "Phần 4.3 (Trang 10): Cùng bị từ chối dự bàn ở Bình Than năm 1282 với Quốc Toản còn có Hoài Nhân vương Trần Kiện.",
-              "Phần 5.1 (Trang 11): Chi tiết vua trao cam và mẹ thêu cờ vàng bắt buộc phải tách riêng sang phần lời bình văn học."
-            ],
-            wrongIndex: 0,
-            excerpts: [
-              {
-                page: "Trang 9 · Mục 4.2",
-                quote: "“Câu nói ‘Ta thà làm quỷ nước Nam, chứ không thèm làm vương đất Bắc!’ — Người nói chính xác: Bảo Nghĩa vương Trần Bình Trọng (tháng Giêng năm 1285 tại bãi Đà Mạc). AI đôi khi lắp nhầm câu này vào miệng Trần Quốc Toản!”"
-              },
-              {
-                page: "Trang 10 · Mục 4.3",
-                quote: "“Trên bến Bình Than năm 1282 không chỉ có một mình Trần Quốc Toản bị từ chối vì nhỏ tuổi, mà có tới hai người trẻ tuổi: người thứ hai là Hoài Nhân vương Kiện.”"
-              },
-              {
-                page: "Trang 11 · Mục 5.1",
-                quote: "“Nếu nhóm muốn nhắc tới các chi tiết giàu cảm xúc của nhà văn Nguyễn Huy Tưởng (như vua trao cam, mẹ thêu cờ vàng, ngã xuống tuổi 16), bắt buộc phải tách riêng ở lời bình và nói rõ đó là chi tiết văn học.”"
-              }
-            ],
-            explain:
-              "AI ghi đúng “Phần 4.2 (Trang 9)” nhưng gán nhầm câu nói bất hủ của Bảo Nghĩa vương Trần Bình Trọng cho Trần Quốc Toản! Chỉ cần mở đúng trang gốc dò 10 giây là bắt được ngay: AI nháp · Mình kiểm · Mình chốt!"
-          }
-        ]
+          "Mẹo kiểm chữ C (Cái khó): Nếu thử che ô (C) lại mà câu trả lời của AI khác hẳn so với khi có ô (C), nghĩa là bạn đã gọi trúng “Cái khó” riêng của mình!",
+        answerPlaceholder:
+          "Dán đoạn Gemini trả lời mà bạn tâm đắc hoặc thấy giải quyết trúng việc nhất vào đây...",
+        step3Reminder:
+          "Nhịp 3 của 4D (Mình kiểm cuối): AI giúp mở góc nhìn rất nhanh, còn bạn hãy đối chiếu lại với thực tế của mình rồi tự chốt quyết định nhé. (Bài làm chỉ lưu trên trình duyệt máy bạn).",
+        doneNote:
+          "✓ Đã lưu câu lệnh & câu trả lời tâm đắc của bạn! Bấm tiếp tục sang Trang 6 để ghi nhanh suy ngẫm 4F nhé."
       }
     ],
 
@@ -689,16 +586,16 @@
 
     homework4F: {
       taskAdult:
-        "Đem S – C – Q + Trang – Sót – Bàn áp vào 1 tài liệu thật của bạn trên Gemini, tự mở trang gốc kiểm lại, rồi viết 4F ngay bên dưới để buổi sau xem lại.",
+        "Suy ngẫm 4F về buổi học và chính lần bạn vừa đem việc thật của mình ra hỏi Gemini ở trang trước.",
       taskStudent:
-        "Đem S – C – Q + Trang – Sót – Bàn áp vào 1 đề cương hoặc tư liệu môn học thật trên Gemini, tự mở trang gốc dò lại, rồi viết 4F ngay bên dưới để buổi sau trao đổi.",
+        "Suy ngẫm 4F về buổi học và chính lần bạn vừa đem việc thật của mình ra hỏi Gemini ở trang trước.",
       leadNote:
         "Gập bài học lại rồi gõ thẳng vào từng mục — gõ tới mục nào chữ ví dụ mờ của mục đó sẽ tự biến mất:",
       zones: [
         {
           key: "facts",
           title: "1. Facts",
-          cue: "Đã nghe gì từ bài & đã tự làm gì (tài liệu thật, câu lệnh đã gõ, trang gốc đã mở)?",
+          cue: "Đã nghe gì từ bài & đã tự làm gì (việc thật bạn đem ra hỏi, câu lệnh đã gửi, AI trả lời gì)?",
           ghost:
             "🍳 VD (chuyện học rán trứng): Xem clip dạy lửa nhỏ, cuộn lúc mặt trứng còn ướt.\n- Tối vào bếp rán thử 2 mẻ trên chảo mỏng: mẻ 1 để lửa vừa bị cháy xém & gãy đôi; mẻ 2 hạ nhỏ lửa thì cuộn được.",
           rows: 3
@@ -706,7 +603,7 @@
         {
           key: "feelings",
           title: "2. Feelings",
-          cue: "Lúc học và lúc tự làm thấy sao — vì sao? (thành thật với mình, không ai chấm)",
+          cue: "Lúc học và lúc tự hỏi việc thật của mình thấy sao — vì sao? (thành thật với mình, không ai chấm)",
           ghost:
             "🍳 VD: Lúc xem clip thấy chủ quan vì nhìn đầu bếp lật nhẹ tênh tưởng dễ.\n- Lúc mẻ đầu cháy khét thì vừa quê vừa cay cú; tới mẻ 2 lành lặn mới thở phào.",
           rows: 2
@@ -714,7 +611,7 @@
         {
           key: "findings",
           title: "3. Findings",
-          cue: "Tưởng vậy, hóa ra…? (điều trước khi học & tự tay làm bạn chưa nhận ra)",
+          cue: "Tưởng vậy, hóa ra…? (điều trước khi tự viết S – C – Q cho việc thật bạn chưa nhận ra)",
           ghost:
             "🍳 VD: Xem người khác làm mượt rất dễ tưởng mình đã biết làm.\n- Tưởng rách do tay lật vụng, hóa ra chảo mỏng ở nhà nóng gắt hơn bếp từ trong clip; chi tiết thử nhiệt đầu đũa clip có nói mà mình nghe lướt.",
           rows: 3
@@ -722,7 +619,7 @@
         {
           key: "future",
           title: "4. Future",
-          cue: "Lần tới làm việc nhỏ nào (tài liệu gì, khi nào) hoặc còn câu hỏi nào thắc mắc?",
+          cue: "Lần tới bạn sẽ áp dụng S – C – Q vào việc cụ thể nào, hoặc còn câu hỏi nào muốn bàn tiếp?",
           ghost:
             "🍳 VD: [ ] Sáng thứ Bảy rán lại: thử đầu đũa trước khi đổ trứng và nhấc chảo khỏi bếp 10 giây lúc cuộn.\n- [ ] Tìm hiểu xem pha thêm 1 thìa sữa tươi có giúp trứng đỡ khô nhanh không.",
           rows: 2
