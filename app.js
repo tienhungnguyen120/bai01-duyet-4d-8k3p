@@ -69,9 +69,15 @@
     const el = document.createElement(tag);
     if (attrs) {
       for (const [k, v] of Object.entries(attrs)) {
+        if (k === "value") {
+          el.value = v === null || v === undefined ? "" : String(v);
+          continue;
+        }
         if (v === null || v === undefined || v === false) continue;
         if (k === "className") el.className = v;
-        else if (k.startsWith("on") && typeof v === "function") {
+        else if (k === "checked" || k === "disabled" || k === "hidden" || k === "readOnly") {
+          el[k] = Boolean(v);
+        } else if (k.startsWith("on") && typeof v === "function") {
           el.addEventListener(k.slice(2).toLowerCase(), v);
         } else if (v === true) {
           el.setAttribute(k, "");
@@ -1540,6 +1546,10 @@
         tProg.doneSteps[6] = true;
         saveState();
         updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 6 });
+      } else if (!any && tProg.doneSteps[6]) {
+        delete tProg.doneSteps[6];
+        saveState();
+        updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 6 });
       }
       configureDock({
         prevLabel: "← Trang 5: Làm việc thật",
@@ -1558,8 +1568,6 @@
       });
     }
 
-    const wrap = h("div", { className: "hw-4f-wrap" });
-
     const pinnedCard =
       snap.finalPrompt.length > 0 &&
       h(
@@ -1576,159 +1584,147 @@
           )
       );
 
-    function drawSheet(focusIdx = null) {
+    const saveLbl = h("span", { className: "save-status" });
+    const peekBtn = h("button", { type: "button", className: "icon-tool-btn" });
+    const inputs = [];
+
+    function syncInlineControls() {
       const any = hasAnyText();
-      const saveLbl = h(
-        "span",
-        { className: `save-status ${any ? "saved" : ""}` },
-        any
-          ? "Đã tự lưu trên máy này ✓"
-          : "Chữ mờ chỉ là ví dụ chuyện rán trứng — cứ đặt chuột gõ đè lên"
-      );
+      saveLbl.textContent = any
+        ? "Đã tự lưu trên máy này ✓"
+        : "Chữ mờ chỉ là ví dụ chuyện rán trứng — cứ đặt chuột vào từng ô để gõ";
+      saveLbl.classList.toggle("saved", any);
 
-      const inputs = [];
-      const zoneNodes = hw.zones.map((z, idx) => {
+      peekBtn.hidden = !any;
+      peekBtn.textContent = tProg.peekFourFExample ? "Ẩn ví dụ nhắc" : "👁️ Xem lại ví dụ";
+
+      inputs.forEach(({ z, peekBar }) => {
         const typed = (bag[z.key] || "").trim().length > 0;
-        const ta = h("textarea", {
-          className: "f-zone-input",
-          rows: z.rows,
-          placeholder: z.ghost,
-          value: bag[z.key] || "",
-          "aria-label": `${z.title} — ${z.cue}`,
-          onInput: e => {
-            const wasEmpty = !hasAnyText();
-            bag[z.key] = e.target.value;
-            saveState();
-            autoFit(ta, z.rows);
-            const nowAny = hasAnyText();
-            if (wasEmpty !== nowAny) {
-              syncDoneAndDock();
-              drawSheet(idx);
-            } else {
-              saveLbl.textContent = nowAny
-                ? "Đã tự lưu trên máy này ✓"
-                : "Chữ mờ chỉ là ví dụ chuyện rán trứng — cứ đặt chuột gõ đè lên";
-              saveLbl.classList.toggle("saved", nowAny);
-            }
-          }
-        });
-        inputs.push({ ta, rows: z.rows });
-
-        return h(
-          "div",
-          { className: "f-zone" },
-          h(
-            "div",
-            { className: "f-zone-head" },
-            h("span", { className: "f-zone-title" }, z.title),
-            h("span", { className: "f-zone-cue" }, `· ${z.cue}`)
-          ),
-          typed &&
-            tProg.peekFourFExample &&
-            h("div", { className: "peek-example-bar" }, z.ghost.replace(/\n/g, " ")),
-          ta
-        );
-      });
-
-      wrap.replaceChildren(
-        ...[
-          h(
-            "div",
-            { className: "hw-task-line" },
-            h("strong", null, "🏠 Bài tập về nhà · 4F: "),
-            taskText
-          ),
-          pinnedCard,
-          h(
-            "section",
-            { className: "notebook-sheet" },
-            h(
-              "div",
-              { className: "sheet-top" },
-              h("p", { className: "sheet-note" }, "✍️ ", h("strong", null, hw.leadNote)),
-              h(
-                "div",
-                { style: "display:flex;gap:0.4rem" },
-                any &&
-                  h(
-                    "button",
-                    {
-                      type: "button",
-                      className: "icon-tool-btn",
-                      onClick: () => {
-                        tProg.peekFourFExample = !tProg.peekFourFExample;
-                        saveState();
-                        drawSheet();
-                      }
-                    },
-                    tProg.peekFourFExample ? "Ẩn ví dụ nhắc" : "👁️ Xem lại ví dụ"
-                  ),
-                h(
-                  "button",
-                  {
-                    type: "button",
-                    className: "icon-tool-btn",
-                    onClick: () => {
-                      if (
-                        hasAnyText() &&
-                        !window.confirm("Xóa nội dung đang gõ để hiện lại chữ ví dụ mờ ban đầu?")
-                      ) {
-                        return;
-                      }
-                      tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
-                      Object.assign(bag, tProg.fourF);
-                      tProg.peekFourFExample = false;
-                      delete tProg.doneSteps[6];
-                      saveState();
-                      updateHeaderAndDock({ screen: "step", scenario: scenarioId, step: 6 });
-                      syncDoneAndDock();
-                      drawSheet();
-                    }
-                  },
-                  "Xóa trắng"
-                )
-              )
-            ),
-            h("div", null, ...zoneNodes),
-            h(
-              "div",
-              { className: "sheet-footer" },
-              saveLbl,
-              h(
-                "button",
-                {
-                  type: "button",
-                  className: "btn-tactile",
-                  style: "padding:0.48rem 0.95rem;font-size:0.86rem",
-                  onClick: () => {
-                    if (!hasAnyText()) {
-                      showToast("Hãy gõ vài dòng vào các mục trước khi sao chép nhé!");
-                      if (inputs[0]) inputs[0].ta.focus();
-                      return;
-                    }
-                    copyText(compileNote());
-                  }
-                },
-                "📋 Sao chép bài 4F để nộp"
-              )
-            )
-          )
-        ].filter(Boolean)
-      );
-
-      requestAnimationFrame(() => {
-        inputs.forEach(({ ta, rows }) => autoFit(ta, rows));
-        if (focusIdx !== null && inputs[focusIdx]) {
-          const fTa = inputs[focusIdx].ta;
-          fTa.focus();
-          fTa.setSelectionRange(fTa.value.length, fTa.value.length);
-        }
+        peekBar.hidden = !(typed && tProg.peekFourFExample);
       });
     }
 
+    peekBtn.addEventListener("click", () => {
+      tProg.peekFourFExample = !tProg.peekFourFExample;
+      saveState();
+      syncInlineControls();
+    });
+
+    const clearBtn = h(
+      "button",
+      {
+        type: "button",
+        className: "icon-tool-btn",
+        onClick: () => {
+          if (
+            hasAnyText() &&
+            !window.confirm("Xóa nội dung đang gõ để hiện lại chữ ví dụ mờ ban đầu?")
+          ) {
+            return;
+          }
+          tProg.fourF = { facts: "", feelings: "", findings: "", future: "" };
+          Object.assign(bag, tProg.fourF);
+          tProg.peekFourFExample = false;
+          inputs.forEach(({ ta, z }) => {
+            ta.value = "";
+            autoFit(ta, z.rows);
+          });
+          saveState();
+          syncInlineControls();
+          syncDoneAndDock();
+        }
+      },
+      "Xóa trắng"
+    );
+
+    const zoneNodes = hw.zones.map(z => {
+      const id = `fourf-zone-${z.key}`;
+      const peekBar = h("div", { className: "peek-example-bar", hidden: true }, z.ghost.replace(/\n/g, " "));
+      const ta = h("textarea", {
+        id,
+        className: "f-zone-input",
+        rows: z.rows,
+        placeholder: z.ghost,
+        value: bag[z.key] || "",
+        "aria-label": `${z.title} — ${z.cue}`,
+        onInput: e => {
+          const wasEmpty = !hasAnyText();
+          bag[z.key] = e.target.value;
+          saveState();
+          autoFit(ta, z.rows);
+          syncInlineControls();
+          if (wasEmpty !== !hasAnyText()) {
+            syncDoneAndDock();
+          }
+        }
+      });
+      inputs.push({ z, ta, peekBar });
+
+      return h(
+        "div",
+        { className: "f-zone" },
+        h(
+          "label",
+          { for: id, className: "f-zone-head", style: "cursor:pointer" },
+          h("span", { className: "f-zone-title" }, z.title),
+          h("span", { className: "f-zone-cue" }, `· ${z.cue}`)
+        ),
+        peekBar,
+        ta
+      );
+    });
+
+    const wrap = h(
+      "div",
+      { className: "hw-4f-wrap" },
+      h(
+        "div",
+        { className: "hw-task-line" },
+        h("strong", null, "🏠 Bài tập về nhà · 4F: "),
+        taskText
+      ),
+      pinnedCard,
+      h(
+        "section",
+        { className: "notebook-sheet" },
+        h(
+          "div",
+          { className: "sheet-top" },
+          h("p", { className: "sheet-note" }, "✍️ ", h("strong", null, hw.leadNote)),
+          h("div", { style: "display:flex;gap:0.4rem" }, peekBtn, clearBtn)
+        ),
+        h("div", null, ...zoneNodes),
+        h(
+          "div",
+          { className: "sheet-footer" },
+          saveLbl,
+          h(
+            "button",
+            {
+              type: "button",
+              className: "btn-tactile",
+              style: "padding:0.48rem 0.95rem;font-size:0.86rem",
+              onClick: () => {
+                if (!hasAnyText()) {
+                  showToast("Hãy gõ vài dòng vào các mục trước khi sao chép nhé!");
+                  if (inputs[0]) inputs[0].ta.focus();
+                  return;
+                }
+                copyText(compileNote());
+              }
+            },
+            "📋 Sao chép bài 4F để nộp"
+          )
+        )
+      )
+    );
+
     container.append(wrap);
+    syncInlineControls();
     syncDoneAndDock();
-    drawSheet();
+    requestAnimationFrame(() => {
+      inputs.forEach(({ ta, z }) => autoFit(ta, z.rows));
+    });
   }
 
   // ==================== MAIN RENDER DISPATCH ====================
