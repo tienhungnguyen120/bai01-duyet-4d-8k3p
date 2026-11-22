@@ -330,14 +330,7 @@
           "div",
           { className: "welcome-hero" },
           h("span", { className: "welcome-kicker" }, "BÀI 01 · NGHĨ TRƯỚC KHI HỎI AI"),
-          h("h1", { className: "welcome-title" }, "Tóm tắt tài liệu dài cùng Gemini"),
-          h(
-            "p",
-            { className: "welcome-sub" },
-            "Hỏi “tóm tắt”, AI chỉ kể tài liệu viết gì — nghĩ trước ",
-            h("span", { className: "marker-sweep" }, "S (Hoàn cảnh) · C (Cái khó) · Q (Câu hỏi)"),
-            ", AI mới chỉ ra bạn mất gì, dùng được gì!"
-          )
+          h("h1", { className: "welcome-title" }, "Tóm tắt tài liệu dài cùng Gemini")
         ),
         h("p", { className: "journey-section-label" }, "Chọn hành trình gần với bạn nhất để bắt đầu:"),
         h("div", { className: "journey-grid" }, ...cards)
