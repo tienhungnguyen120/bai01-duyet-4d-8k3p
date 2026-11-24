@@ -71,8 +71,8 @@
         desc: "Thực chiến nối 3 trang hợp đồng rời rạc trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
         duration: "02:30",
         journeyMeta: "2 video ngắn · 3 bài thực hành + Suy ngẫm 4F",
-        videoSrc: "media/tinh-huong-1-hop-dong.mp4",
-        posterSrc: "media/poster-hop-dong.jpg",
+        videoSrc: "media/tinh-huong-1-hop-dong.mp4?v=20261125",
+        posterSrc: "media/poster-hop-dong.jpg?v=20261125",
         segments: [
           {
             time: 2.25,
@@ -119,8 +119,8 @@
         ],
         fourD: {
           duration: "01:28",
-          videoSrc: "media/quy-luat-4d-hop-dong.mp4",
-          posterSrc: "media/poster-4d.jpg",
+          videoSrc: "media/quy-luat-4d-hop-dong.mp4?v=20261125",
+          posterSrc: "media/poster-4d.jpg?v=20261125",
           bridgeNote: "Nối trực tiếp từ tình huống Hợp đồng thuê mặt bằng sang Khung 4D",
           segments: [
             {
@@ -167,8 +167,8 @@
         desc: "Thực chiến lọc chính sử Đại Việt sử ký toàn thư và chi tiết văn học trên màn hình Gemini thật bằng Khung 4D (Anthropic) × Khuôn S – C – Q (McKinsey).",
         duration: "02:48",
         journeyMeta: "2 video ngắn · 3 bài thực hành + Suy ngẫm 4F",
-        videoSrc: "media/tinh-huong-2-lich-su.mp4",
-        posterSrc: "media/poster-lich-su.jpg",
+        videoSrc: "media/tinh-huong-2-lich-su.mp4?v=20261125",
+        posterSrc: "media/poster-lich-su.jpg?v=20261125",
         segments: [
           {
             time: 2.35,
@@ -215,8 +215,8 @@
         ],
         fourD: {
           duration: "01:28",
-          videoSrc: "media/quy-luat-4d-lich-su.mp4",
-          posterSrc: "media/poster-4d-lich-su.jpg",
+          videoSrc: "media/quy-luat-4d-lich-su.mp4?v=20261125",
+          posterSrc: "media/poster-4d-lich-su.jpg?v=20261125",
           bridgeNote: "Nối trực tiếp từ tình huống Kịch bản Lịch sử sang Khung 4D",
           segments: [
             {
